@@ -12,13 +12,13 @@ Returns a list of all departments.
 [
   {
     "name": string, /* Department name e.g. "Computer Science" */
-    "course_prefix": string, /* Course prefix e.g. "CSC" */
+    "department_id": string, /* Department abbreviation (course prefix) e.g. "CSC" */
   }
   // ...
 ]
 ```
 
-#### `GET /department/{course_prefix}/`
+#### `GET /department/{department_id}/`
 
 Returns data about a specific department.
 
@@ -27,11 +27,28 @@ Returns data about a specific department.
 ```ts
 {
   "name": string, /* Department name e.g. "Computer Science" */
-  "course_prefix": string, /* Course prefix e.g. "CSC" */
+  "department_id": string, /* Department abbreviation (course prefix) e.g. "CSC" */
 }
 ```
 
-#### `GET /department/{course_prefix}/course`
+#### `GET /department/{department_id}/programs`
+
+Returns all programs in a department.
+
+#### Response:
+
+```ts
+[
+  {
+    "program_id": number,
+    "name": string, /* Program name e.g. "Computer Science" */
+    "program_types": string[] /* Program types offered e.g. ["BS", "MS", "Minor"] */
+  }
+  // ...
+]
+```
+
+#### `GET /department/{department_id}/course`
 
 Returns a list of all courses in a given department.
 
