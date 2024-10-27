@@ -33,7 +33,7 @@ router.get("/program/:program_id/:program_type", (req, res) => {
   });
 });
 
-router.get("/program/:program_id/BS/concentration", (req, res) => {
+router.get("/program/:program_id/:program_type/concentration", (req, res) => {
   res.send([
     {
       concentration_id: 1,
@@ -46,7 +46,7 @@ router.get("/program/:program_id/BS/concentration", (req, res) => {
   ]);
 });
 
-router.get("/program/:program_id/BS/concentration/:concentration_id", (req, res) => {
+router.get("/program/:program_id/:program_type/concentration/:concentration_id", (req, res) => {
   res.send({
     name: "Data Engineering",
     required_courses: [1, 2, 3, 4],
