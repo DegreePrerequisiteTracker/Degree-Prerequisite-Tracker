@@ -1,29 +1,45 @@
 import express from "express";
+import sql, { one } from "../database.js";
 
 const router = express.Router();
 export default router;
 
-router.get("/department", (req, res) => {
-  res.send([
-    {
-      name: "Computer Science",
-      department_id: "CSC",
-    },
-    {
-      name: "Computer Engineering",
-      department_id: "CPE",
-    },
-  ]);
+interface Department {
+  name: string;
+  prefix: string;
+}
+
+interface Course {
+  id: number;
+  name: string;
+  number: number;
+}
+
+router.get("/department", async (req, res) => {
+  const departments = await sql<Department[]>`SELECT name, prefix FROM departments`;
+
+  res.send(
+    departments.map((department) => ({
+      name: department.name,
+      departmentId: department.prefix,
+    })),
+  );
 });
 
-router.get("/department/:department_id", (req, res) => {
+router.get("/department/:departmentPrefix", async (req, res) => {
+  const departmentPrefix = req.params.departmentPrefix;
+
+  const department = await one(
+    sql<Department[]>`SELECT name, prefix FROM departments WHERE prefix = ${departmentPrefix}`,
+  );
+
   res.send({
-    name: "Computer Science",
-    department_id: "CSC",
+    name: department.name,
+    departmentId: department.prefix,
   });
 });
 
-router.get("/department/:department_id/programs", (req, res) => {
+router.get("/department/:departmentPrefix/programs", (req, res) => {
   res.send([
     {
       program_id: 1,
@@ -33,17 +49,16 @@ router.get("/department/:department_id/programs", (req, res) => {
   ]);
 });
 
-router.get("/department/:department_id/course", (req, res) => {
-  res.send([
-    {
-      course_id: 1,
-      course_name: "Fundamentals of Computer Science",
-      course_number: 101,
-    },
-    {
-      course_id: 2,
-      course_name: "Data Structures",
-      course_number: 202,
-    },
-  ]);
+router.get("/department/:departmentPrefix/courses", async (req, res) => {
+  const departmentPrefix = req.params.departmentPrefix;
+
+  const courses = await sql<Course[]>`SELECT id, name, number FROM courses WHERE prefix = ${departmentPrefix}`;
+
+  res.send(
+    courses.map((course) => ({
+      courseId: course.id,
+      courseName: course.name,
+      courseNumber: course.number,
+    })),
+  );
 });

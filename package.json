@@ -7,7 +7,7 @@
     "lint": "prettier --check ./src && eslint",
     "fix": "prettier ./src --write && eslint --fix",
     "build": "tsc",
-    "server": "tsc && node ./build/main.js 3000",
+    "server": "tsc && node --env-file=.env ./build/main.js 3000",
     "release": "npm run build && npm run lint"
   },
   "devDependencies": {
@@ -21,6 +21,7 @@
     "typescript-eslint": "^8.11.0"
   },
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "postgres": "^3.4.5"
   }
 }
