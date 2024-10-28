@@ -3,7 +3,6 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-
 //Returns a list of plans for the current user.
 router.get('/plan', (req, res) => {
   res.send({
@@ -22,13 +21,6 @@ router.post('/plan', (req, res) => {
   });
 });
 
-//Gets a plan for the current user by the plan id.
-router.get('/plan/:plan_id',(req,res) =>{
-  res.send({
-    plan_id: 1,
-  });
-});
-
 
 //get a plan form user
 router.get('/plan/:plan_id', (req, res) =>{
@@ -44,11 +36,7 @@ router.get('/plan/:plan_id', (req, res) =>{
 
 //put an updated plan
 router.put('/plan/:plan_id', (req,res) =>{
-  res.send({
-    "program_id": 2,
-    "program_type": "BS",
-    "concentration_id": 5
-  });
+  res.send();
 });
 
 
