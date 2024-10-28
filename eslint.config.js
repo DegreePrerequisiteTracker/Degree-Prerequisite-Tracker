@@ -10,6 +10,7 @@ export default tseslint.config(
   {
     rules: {
       eqeqeq: "error",
+      camelcase: "error",
     },
   },
   pluginJs.configs.recommended,
