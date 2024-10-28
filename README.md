@@ -7,6 +7,7 @@
 Kai Swangler | kswangle@calpoly.edu  
 Nathan Lackie | nlackie@calpoly.edu  
 Cody Barriger | cbarrige@calpoly.edu
+Zoila Kanu | zkanu@calpoly.edu
 
 ### Overview
 
