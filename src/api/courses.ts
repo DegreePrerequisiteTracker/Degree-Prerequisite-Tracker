@@ -3,11 +3,11 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-router.get("/course/:courseId", (req, res) => {
+router.get("/courses/:courseId", (req, res) => {
   res.send({
-    course_prefix: "CSC",
-    course_number: 365,
-    title: "Introduction to Database Systems",
+    coursePrefix: "CSC",
+    courseNumber: 365,
+    name: "Introduction to Database Systems",
     units: 4,
     crosslisted: null,
     prerequisites: [

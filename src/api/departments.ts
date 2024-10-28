@@ -15,7 +15,7 @@ interface Course {
   number: number;
 }
 
-router.get("/department", async (req, res) => {
+router.get("/departments", async (req, res) => {
   const departments = await sql<Department[]>`SELECT name, prefix FROM departments`;
 
   res.send(
@@ -26,7 +26,7 @@ router.get("/department", async (req, res) => {
   );
 });
 
-router.get("/department/:departmentPrefix", async (req, res) => {
+router.get("/departments/:departmentPrefix", async (req, res) => {
   const departmentPrefix = req.params.departmentPrefix;
 
   const department = await one(
@@ -39,17 +39,17 @@ router.get("/department/:departmentPrefix", async (req, res) => {
   });
 });
 
-router.get("/department/:departmentPrefix/programs", (req, res) => {
+router.get("/departments/:departmentPrefix/programs", (req, res) => {
   res.send([
     {
-      program_id: 1,
-      name: "Computer Science",
-      program_types: ["BS", "MS", "Minor"],
+      programId: 1,
+      programName: "Computer Science",
+      programTypes: ["BS", "MS", "Minor"],
     },
   ]);
 });
 
-router.get("/department/:departmentPrefix/courses", async (req, res) => {
+router.get("/departments/:departmentPrefix/courses", async (req, res) => {
   const departmentPrefix = req.params.departmentPrefix;
 
   const courses = await sql<Course[]>`SELECT id, name, number FROM courses WHERE prefix = ${departmentPrefix}`;
