@@ -34,7 +34,7 @@ router.delete("/plan/:plan_id", (req, res) => {
   res.send();
 });
 
-router.get("/plan/:plan_id", (req, res) => {
+router.get("/plan/:plan_id/courses", (req, res) => {
   res.send({
     name: "string",
     course_number: 4056,
