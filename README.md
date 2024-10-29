@@ -6,7 +6,7 @@
 
 Kai Swangler | kswangle@calpoly.edu  
 Nathan Lackie | nlackie@calpoly.edu  
-Cody Barriger | cbarrige@calpoly.edu
+Cody Barriger | cbarrige@calpoly.edu  
 Zoila Kanu | zkanu@calpoly.edu
 
 ### Overview
@@ -79,4 +79,6 @@ See the ExpressJS documentation for more information: https://expressjs.com/en/4
 2. Test your commit builds sucessfully and passes the linting with `npm run release`
    - Alternatively, you can test these steps individually with `npm run build` and `npm run lint`
 3. If it passes, push your commit to a branch
+   - If it fails, run `npm run fix` to automatically fix violations
+   - Prettier violations should all be automatically fixable, but you may need to fix some ESLint violations manually
 4. Create a pull request on Github to merge your branch into the main branch
