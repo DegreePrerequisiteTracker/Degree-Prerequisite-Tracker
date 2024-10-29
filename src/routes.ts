@@ -1,9 +1,9 @@
 import type { Express } from "express";
-import user from "./api/user.js";
-import department from "./api/department.js";
-import course from "./api/course.js";
-import program from "./api/program.js";
-import plan from "./api/plan.js";
+import user from "./api/users.js";
+import department from "./api/departments.js";
+import course from "./api/courses.js";
+import program from "./api/programs.js";
+import plan from "./api/plans.js";
 import apiDocs from "./api/apiDocs.js";
 
 export function createRoutes(app: Express) {
