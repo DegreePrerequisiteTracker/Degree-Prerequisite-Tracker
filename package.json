@@ -21,7 +21,7 @@
     "typescript-eslint": "^8.11.0"
   },
   "dependencies": {
-    "express": "^4.21.1",
+    "express": "^5.0.1",
     "postgres": "^3.4.5"
   }
 }
