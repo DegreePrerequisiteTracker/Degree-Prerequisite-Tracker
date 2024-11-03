@@ -64,6 +64,22 @@ We will also have analyis logic for suggesting a priority for courses based on a
 
 See the ExpressJS documentation for more information: https://expressjs.com/en/4x/api.html
 
+### Using authentication
+
+In order to make a route require authentication to be accessed, you can call the `authUser()` function. This will verify the authorization header provided with the request, and retrieve the associated user data.
+
+```ts
+import { authUser } from "../auth.js";
+
+router.get("/auth/example", async (req, res) => {
+  const user = await authUser(req);
+
+  // Logic here
+});
+```
+
+NOTE: Make sure you await the call to `authUser()`, and make the call before doing anything an unauthenticated user shouldn't be able to do.
+
 ### Testing the server
 
 1. Ensure your server is running with `npm run server`
