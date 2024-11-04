@@ -3,6 +3,8 @@ import { createRoutes } from "./routes.js";
 
 export const app = express();
 
+app.use(express.json());
+
 createRoutes(app);
 
 // Start server

@@ -163,20 +163,49 @@ User wants to create a plan, and mark courses as complete as they progress in th
 
 ```json
 {
-  "program_id": 51,
-  "program_type": "BS",
-  "concentration_id": 3
+  "graduationDate": "2026-06-30",
+  "programId": 23,
+  "concentrationId": 26
 }
 ```
 
-2. `GET /plan/{plan_id}/courses` view the courses in the newly created plan
-3. `PUT /user/history/{course_id}` mark a course as complete (happens at the user level, so it applies to all plans)
-4. `DELETE /user/history/{course_id}` optionally, mark a course as incomplete if it was mistakenly set as completed
-5. `DELETE /plan/{plan_id}/` delete the plan when it is no longer needed
+2. `PUT /user/history/{course_id}` mark a course as complete (happens at the user level, so it applies to all plans)
+3. `DELETE /user/history/{course_id}` optionally, mark a course as incomplete if it was mistakenly set as completed
+4. `DELETE /plan/{plan_id}/` delete the plan when it is no longer needed
 
 ### Testing results
 
-TODO
+```bash
+curl -X POST 'https://degree-prerequisite-tracker.onrender.com/plans' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer {authorization-token}' \
+-d '{"graduationDate": "2026-06-30", "programId": 23, "concentrationId": 26}'
+```
+
+```json
+{ "planId": 1 }
+```
+
+```bash
+curl -X PUT 'https://degree-prerequisite-tracker.onrender.com/users/history/1314' \
+-H 'Authorization: Bearer {authorization-token}'
+```
+
+`200 OK`
+
+```bash
+curl -X DELETE 'https://degree-prerequisite-tracker.onrender.com/users/history/1314' \
+-H 'Authorization: Bearer {authorization-token}'
+```
+
+`200 OK`
+
+```bash
+curl -X DELETE 'https://degree-prerequisite-tracker.onrender.com/plans/1' \
+-H 'Authorization: Bearer {authorization-token}'
+```
+
+`200 OK`
 
 # Selecting program
 

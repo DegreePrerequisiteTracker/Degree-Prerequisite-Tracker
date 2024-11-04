@@ -23,6 +23,7 @@
   "dependencies": {
     "express": "^5.0.1",
     "http-errors": "^2.0.0",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "zod": "^3.23.8"
   }
 }
