@@ -16,16 +16,15 @@ User wants to create a plan, and mark courses as complete as they progress in th
 
 ```json
 {
-  "program_id": 51,
-  "program_type": "BS",
-  "concentration_id": 3
+  "graduationDate": "2026-06-30",
+  "programId": 23,
+  "concentrationId": 26
 }
 ```
 
-2. `GET /plan/{plan_id}/courses` view the courses in the newly created plan
-3. `PUT /user/history/{course_id}` mark a course as complete (happens at the user level, so it applies to all plans)
-4. `DELETE /user/history/{course_id}` optionally, mark a course as incomplete if it was mistakenly set as completed
-5. `DELETE /plan/{plan_id}/` delete the plan when it is no longer needed
+2. `PUT /user/history/{courseId}` mark a course as complete (happens at the user level, so it applies to all plans)
+3. `DELETE /user/history/{courseId}` optionally, mark a course as incomplete if it was mistakenly set as completed
+4. `DELETE /plan/{planId}/` delete the plan when it is no longer needed
 
 ### Selecting program
 
