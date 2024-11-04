@@ -2,404 +2,404 @@
 
 User wants to browse the course catalog, and get information for a specific course.
 
-1. `GET /departments` gets a list of departments
-2. `GET /departments/{coursePrefix}/courses` select course prefix from the list of departments, gets a list of all courses in that department
+1. `GET /subjects` gets a list of subjects
+2. `GET /subjects/{prefix}/courses` select course prefix from the list of subjects, gets a list of all courses in that subject
 3. `GET /courses/{courseId}/` select a course id from the list of courses, and get information about a specific course
 
 # Testing results
 
-`curl -X 'GET' https://degree-prerequisite-tracker.onrender.com/departments/`
+`curl -X 'GET' https://degree-prerequisite-tracker.onrender.com/subjects/`
 
 ```json
 [
   {
     "name": "Aerospace Engineering",
-    "departmentId": "AERO"
+    "prefix": "AERO"
   },
   {
     "name": "Agriculture",
-    "departmentId": "AG"
+    "prefix": "AG"
   },
   {
     "name": "Agribusiness",
-    "departmentId": "AGB"
+    "prefix": "AGB"
   },
   {
     "name": "Agricultural Communication",
-    "departmentId": "AGC"
+    "prefix": "AGC"
   },
   {
     "name": "Agricultural Education",
-    "departmentId": "AGED"
+    "prefix": "AGED"
   },
   {
     "name": "Anthropology",
-    "departmentId": "ANT"
+    "prefix": "ANT"
   },
   {
     "name": "Architectural Engineering",
-    "departmentId": "ARCE"
+    "prefix": "ARCE"
   },
   {
     "name": "Architecture",
-    "departmentId": "ARCH"
+    "prefix": "ARCH"
   },
   {
     "name": "Art",
-    "departmentId": "ART"
+    "prefix": "ART"
   },
   {
     "name": "Animal Science",
-    "departmentId": "ASCI"
+    "prefix": "ASCI"
   },
   {
     "name": "Astronomy and Astrophysics",
-    "departmentId": "ASTR"
+    "prefix": "ASTR"
   },
   {
     "name": "Biology",
-    "departmentId": "BIO"
+    "prefix": "BIO"
   },
   {
     "name": "Biomedical Engineering",
-    "departmentId": "BMED"
+    "prefix": "BMED"
   },
   {
     "name": "Botany",
-    "departmentId": "BOT"
+    "prefix": "BOT"
   },
   {
     "name": "BioResource and Agricultural Engineering",
-    "departmentId": "BRAE"
+    "prefix": "BRAE"
   },
   {
     "name": "Business",
-    "departmentId": "BUS"
+    "prefix": "BUS"
   },
   {
     "name": "Child Development",
-    "departmentId": "CD"
+    "prefix": "CD"
   },
   {
     "name": "Civil Engineering",
-    "departmentId": "CE"
+    "prefix": "CE"
   },
   {
     "name": "Chemistry",
-    "departmentId": "CHEM"
+    "prefix": "CHEM"
   },
   {
     "name": "Chinese",
-    "departmentId": "CHIN"
+    "prefix": "CHIN"
   },
   {
     "name": "College of Liberal Arts",
-    "departmentId": "CLA"
+    "prefix": "CLA"
   },
   {
     "name": "Construction Management",
-    "departmentId": "CM"
+    "prefix": "CM"
   },
   {
     "name": "Communication Studies",
-    "departmentId": "COMS"
+    "prefix": "COMS"
   },
   {
     "name": "Computer Engineering",
-    "departmentId": "CPE"
+    "prefix": "CPE"
   },
   {
     "name": "City and Regional Planning",
-    "departmentId": "CRP"
+    "prefix": "CRP"
   },
   {
     "name": "Computer Science",
-    "departmentId": "CSC"
+    "prefix": "CSC"
   },
   {
     "name": "Dance",
-    "departmentId": "DANC"
+    "prefix": "DANC"
   },
   {
     "name": "Data Science",
-    "departmentId": "DATA"
+    "prefix": "DATA"
   },
   {
     "name": "Dairy Science",
-    "departmentId": "DSCI"
+    "prefix": "DSCI"
   },
   {
     "name": "Economics",
-    "departmentId": "ECON"
+    "prefix": "ECON"
   },
   {
     "name": "Environmental Design",
-    "departmentId": "EDES"
+    "prefix": "EDES"
   },
   {
     "name": "Education",
-    "departmentId": "EDUC"
+    "prefix": "EDUC"
   },
   {
     "name": "Electrical Engineering",
-    "departmentId": "EE"
+    "prefix": "EE"
   },
   {
     "name": "English",
-    "departmentId": "ENGL"
+    "prefix": "ENGL"
   },
   {
     "name": "Engineering",
-    "departmentId": "ENGR"
+    "prefix": "ENGR"
   },
   {
     "name": "Environmental Engineering",
-    "departmentId": "ENVE"
+    "prefix": "ENVE"
   },
   {
     "name": "Earth Science",
-    "departmentId": "ERSC"
+    "prefix": "ERSC"
   },
   {
     "name": "Ethnic Studies",
-    "departmentId": "ES"
+    "prefix": "ES"
   },
   {
     "name": "Environmental Sciences",
-    "departmentId": "ESCI"
+    "prefix": "ESCI"
   },
   {
     "name": "Early Start English",
-    "departmentId": "ESE"
+    "prefix": "ESE"
   },
   {
     "name": "Early Start Math",
-    "departmentId": "ESM"
+    "prefix": "ESM"
   },
   {
     "name": "Fire Protection Engineering",
-    "departmentId": "FPE"
+    "prefix": "FPE"
   },
   {
     "name": "French",
-    "departmentId": "FR"
+    "prefix": "FR"
   },
   {
     "name": "Food Science and Nutrition",
-    "departmentId": "FSN"
+    "prefix": "FSN"
   },
   {
     "name": "Geography",
-    "departmentId": "GEOG"
+    "prefix": "GEOG"
   },
   {
     "name": "Geology",
-    "departmentId": "GEOL"
+    "prefix": "GEOL"
   },
   {
     "name": "German",
-    "departmentId": "GER"
+    "prefix": "GER"
   },
   {
     "name": "Graphic Communication",
-    "departmentId": "GRC"
+    "prefix": "GRC"
   },
   {
     "name": "Graduate Studies",
-    "departmentId": "GS"
+    "prefix": "GS"
   },
   {
     "name": "Graduate Studies-Accounting",
-    "departmentId": "GSA"
+    "prefix": "GSA"
   },
   {
     "name": "Graduate Studies-Business",
-    "departmentId": "GSB"
+    "prefix": "GSB"
   },
   {
     "name": "Graduate Studies-Economics",
-    "departmentId": "GSE"
+    "prefix": "GSE"
   },
   {
     "name": "Graduate Studies-Packaging",
-    "departmentId": "GSP"
+    "prefix": "GSP"
   },
   {
     "name": "History",
-    "departmentId": "HIST"
+    "prefix": "HIST"
   },
   {
     "name": "Health",
-    "departmentId": "HLTH"
+    "prefix": "HLTH"
   },
   {
     "name": "Honors Contract",
-    "departmentId": "HNRC"
+    "prefix": "HNRC"
   },
   {
     "name": "Honors",
-    "departmentId": "HNRS"
+    "prefix": "HNRS"
   },
   {
     "name": "Industrial and Manufacturing Engineering",
-    "departmentId": "IME"
+    "prefix": "IME"
   },
   {
     "name": "Interdisciplinary Studies in Liberal Arts",
-    "departmentId": "ISLA"
+    "prefix": "ISLA"
   },
   {
     "name": "Italian",
-    "departmentId": "ITAL"
+    "prefix": "ITAL"
   },
   {
     "name": "Industrial Technology and Packaging",
-    "departmentId": "ITP"
+    "prefix": "ITP"
   },
   {
     "name": "Journalism",
-    "departmentId": "JOUR"
+    "prefix": "JOUR"
   },
   {
     "name": "Japanese",
-    "departmentId": "JPNS"
+    "prefix": "JPNS"
   },
   {
     "name": "Kinesiology",
-    "departmentId": "KINE"
+    "prefix": "KINE"
   },
   {
     "name": "Landscape Architecture",
-    "departmentId": "LA"
+    "prefix": "LA"
   },
   {
     "name": "Liberal Arts and Engineering Studies",
-    "departmentId": "LAES"
+    "prefix": "LAES"
   },
   {
     "name": "Liberal Studies",
-    "departmentId": "LS"
+    "prefix": "LS"
   },
   {
     "name": "Materials Engineering",
-    "departmentId": "MATE"
+    "prefix": "MATE"
   },
   {
     "name": "Mathematics",
-    "departmentId": "MATH"
+    "prefix": "MATH"
   },
   {
     "name": "Microbiology",
-    "departmentId": "MCRO"
+    "prefix": "MCRO"
   },
   {
     "name": "Mechanical Engineering",
-    "departmentId": "ME"
+    "prefix": "ME"
   },
   {
     "name": "Marine Science",
-    "departmentId": "MSCI"
+    "prefix": "MSCI"
   },
   {
     "name": "Military Science Leadership",
-    "departmentId": "MSL"
+    "prefix": "MSL"
   },
   {
     "name": "Music",
-    "departmentId": "MU"
+    "prefix": "MU"
   },
   {
     "name": "Natural Resources",
-    "departmentId": "NR"
+    "prefix": "NR"
   },
   {
     "name": "Physical Education: Men",
-    "departmentId": "PEM"
+    "prefix": "PEM"
   },
   {
     "name": "Physical Education: Women",
-    "departmentId": "PEW"
+    "prefix": "PEW"
   },
   {
     "name": "Philosophy",
-    "departmentId": "PHIL"
+    "prefix": "PHIL"
   },
   {
     "name": "Physics",
-    "departmentId": "PHYS"
+    "prefix": "PHYS"
   },
   {
     "name": "Plant Sciences",
-    "departmentId": "PLSC"
+    "prefix": "PLSC"
   },
   {
     "name": "Political Science",
-    "departmentId": "POLS"
+    "prefix": "POLS"
   },
   {
     "name": "Physical Science",
-    "departmentId": "PSC"
+    "prefix": "PSC"
   },
   {
     "name": "Psychology",
-    "departmentId": "PSY"
+    "prefix": "PSY"
   },
   {
     "name": "Religious Studies",
-    "departmentId": "RELS"
+    "prefix": "RELS"
   },
   {
     "name": "Recreation, Parks and Tourism Administration",
-    "departmentId": "RPTA"
+    "prefix": "RPTA"
   },
   {
     "name": "Science and Mathematics",
-    "departmentId": "SCM"
+    "prefix": "SCM"
   },
   {
     "name": "Sociology",
-    "departmentId": "SOC"
+    "prefix": "SOC"
   },
   {
     "name": "Spanish",
-    "departmentId": "SPAN"
+    "prefix": "SPAN"
   },
   {
     "name": "Special Education",
-    "departmentId": "SPED"
+    "prefix": "SPED"
   },
   {
     "name": "Soil Science",
-    "departmentId": "SS"
+    "prefix": "SS"
   },
   {
     "name": "Statistics",
-    "departmentId": "STAT"
+    "prefix": "STAT"
   },
   {
     "name": "Theatre",
-    "departmentId": "TH"
+    "prefix": "TH"
   },
   {
     "name": "University Studies",
-    "departmentId": "UNIV"
+    "prefix": "UNIV"
   },
   {
     "name": "Women's, Gender and Queer Studies",
-    "departmentId": "WGQS"
+    "prefix": "WGQS"
   },
   {
     "name": "World Languages and Cultures",
-    "departmentId": "WLC"
+    "prefix": "WLC"
   },
   {
     "name": "Wine and Viticulture",
-    "departmentId": "WVIT"
+    "prefix": "WVIT"
   }
 ]
 ```
 
-`curl -X 'GET' https://degree-prerequisite-tracker.onrender.com/departments/CSC/courses/`
+`curl -X 'GET' https://degree-prerequisite-tracker.onrender.com/subjects/CSC/courses/`
 
 ```json
 [

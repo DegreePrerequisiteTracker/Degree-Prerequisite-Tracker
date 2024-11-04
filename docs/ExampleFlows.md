@@ -4,8 +4,8 @@
 
 User wants to browse the course catalog, and get information for a specific course.
 
-1. `GET /departments` gets a list of departments
-2. `GET /department/{course_prefix}/course` select course prefix from the list of departments, gets a list of all courses in that department
+1. `GET /subjects` gets a list of subjects
+2. `GET /subjects/{subjectsId}/course` select course prefix from the list of subjects, gets a list of all courses in that subject
 3. `GET /course/{course_id}/` select a course id from the list of courses, and get information about a specific course
 
 ### Using a plan

@@ -11,10 +11,10 @@ create table
   ) tablespace pg_default;
 
 create table
-  public.departments (
+  public.subjects (
     name text not null,
     prefix text not null,
-    constraint departments_pkey primary key (prefix)
+    constraint subjects_pkey primary key (prefix)
   ) tablespace pg_default;
 
 create table

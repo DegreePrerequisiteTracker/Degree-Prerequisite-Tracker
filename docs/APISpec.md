@@ -1,56 +1,39 @@
 # API Spec for Degree Prerequisite Tracker
 
-## Department
+## Subjects
 
-#### `GET /department/`
+#### `GET /subjects/`
 
-Returns a list of all departments.
+Returns a list of all subjects.
 
 #### Response:
 
 ```ts
 [
   {
-    "name": string, /* Department name e.g. "Computer Science" */
-    "department_id": string, /* Department abbreviation (course prefix) e.g. "CSC" */
+    "name": string, /* Subject name e.g. "Computer Science" */
+    "prefix": string /* Subject abbreviation (course prefix) e.g. "CSC" */
   }
   // ...
 ]
 ```
 
-#### `GET /department/{department_id}/`
+#### `GET /subjects/{prefix}/`
 
-Returns data about a specific department.
+Returns data about a specific subject.
 
 #### Response:
 
 ```ts
 {
-  "name": string, /* Department name e.g. "Computer Science" */
-  "department_id": string, /* Department abbreviation (course prefix) e.g. "CSC" */
+  "name": string, /* Subject name e.g. "Computer Science" */
+  "prefix": string, /* Subject abbreviation (course prefix) e.g. "CSC" */
 }
 ```
 
-#### `GET /department/{department_id}/programs`
+#### `GET /subjects/{prefix}/course`
 
-Returns all programs in a department.
-
-#### Response:
-
-```ts
-[
-  {
-    "program_id": number,
-    "name": string, /* Program name e.g. "Computer Science" */
-    "program_types": string[] /* Program types offered e.g. ["BS", "MS", "Minor"] */
-  }
-  // ...
-]
-```
-
-#### `GET /department/{department_id}/course`
-
-Returns a list of all courses in a given department.
+Returns a list of all courses in a given subject.
 
 #### Response:
 
