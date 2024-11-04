@@ -1,54 +1,37 @@
 import express from "express";
+import sql, { one } from "../database.js";
 
 const router = express.Router();
 export default router;
 
-router.get("/programs", (req, res) => {
-  res.send([
-    {
-      programId: 1,
-      name: "Computer Science",
-      programTypes: ["BS", "MS", "Minor"],
-    },
-    {
-      programId: 2,
-      name: "Software Engineering",
-      programTypes: ["BS"],
-    },
-  ]);
-});
+interface Program {
+  name: string;
+  type: string;
+  department_id: number;
+}
 
-router.get("/programs/:programId", (req, res) => {
+interface Concentration {
+  id: number;
+  name: string;
+}
+
+router.get("/programs/:programId", async (req, res) => {
+  const programId = req.params.programId;
+  const program = await one<Program>(sql`SELECT id, name, type, department_id FROM programs WHERE id = ${programId}`);
+
   res.send({
-    programId: 1,
-    name: "Computer Science",
-    programTypes: ["BS", "MS", "Minor"],
+    name: program.name,
+    type: program.type,
+    departmentId: program.department_id,
   });
 });
 
-router.get("/programs/:programId/:programType", (req, res) => {
-  res.send({
-    name: "Computer Science",
-    requirements: [1, 2, 3, 4],
-  });
-});
+router.get("/programs/:programId/concentrations", async (req, res) => {
+  const programId = req.params.programId;
 
-router.get("/programs/:programId/:programType/concentrations", (req, res) => {
-  res.send([
-    {
-      concentrationId: 1,
-      name: "Data Engineering",
-    },
-    {
-      concentrationId: 2,
-      name: "Artificial Intelligence and Machine Learning",
-    },
-  ]);
-});
+  const concentrations = await sql<
+    Concentration[]
+  >`SELECT id, name FROM concentrations WHERE program_id = ${programId}`;
 
-router.get("/programs/:programId/:programType/concentrations/:concentrationId", (req, res) => {
-  res.send({
-    name: "Data Engineering",
-    requiredCourses: [1, 2, 3, 4],
-  });
+  res.send(concentrations.map((concentration) => ({ id: concentration.id, name: concentration.name })));
 });
