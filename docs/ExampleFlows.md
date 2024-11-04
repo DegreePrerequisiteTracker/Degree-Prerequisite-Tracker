@@ -12,7 +12,7 @@ User wants to browse the course catalog, and get information for a specific cour
 
 User wants to create a plan, and mark courses as complete as they progress in their plan.
 
-1. `POST /plan/` create a new plan, EX:
+1. `POST /plans/` create a new plan, EX:
 
 ```json
 {
@@ -22,16 +22,15 @@ User wants to create a plan, and mark courses as complete as they progress in th
 }
 ```
 
-2. `PUT /user/history/{courseId}` mark a course as complete (happens at the user level, so it applies to all plans)
-3. `DELETE /user/history/{courseId}` optionally, mark a course as incomplete if it was mistakenly set as completed
-4. `DELETE /plan/{planId}/` delete the plan when it is no longer needed
+2. `PUT /users/history/{courseId}` mark a course as complete (happens at the user level, so it applies to all plans)
+3. `DELETE /users/history/{courseId}` optionally, mark a course as incomplete if it was mistakenly set as completed
+4. `DELETE /plans/{planId}/` delete the plan when it is no longer needed
 
 ### Selecting program
 
 User wants to explore programs then select a different program for their previously created plan.
 
-1. `GET /department/` : gets a list of departments
-1. `GET /department/{department_id}/programs` : gets a list of programs available in a department
-1. `GET /program/{program_id}` : gets the details for a specific program
-1. `PUT /plan/{plan_id}` : updates previous plan with new program information
-1. `GET /plan/{plan_id}/courses` : gets a list of all courses required for this plan
+1. `GET /departments/` : gets a list of departments
+2. `GET /departments/{departmentId}/programs` : gets a list of programs available in a department
+3. `GET /programs/{programId}/concentrations` : gets a list of all concentrations available in a program
+4. `PUT /plans/{planId}` : updates previous plan with new program and concentration information

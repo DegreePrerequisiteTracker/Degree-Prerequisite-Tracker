@@ -53,7 +53,19 @@ router.get("/plans/:planId", async (req, res) => {
   });
 });
 
-router.put("/plans/:planId", (req, res) => {
+router.put("/plans/:planId", async (req, res) => {
+  const user = await authUser(req);
+  const planId = req.params.planId;
+  const planBody = planReqBody.partial().parse(req.body);
+
+  await sql`
+    UPDATE plans SET
+    graduation_date = COALESCE(${planBody.graduationDate ?? null}, graduation_date),
+    concentration_id = COALESCE(${planBody.concentrationId ?? null}, concentration_id),
+    program_id = COALESCE(${planBody.programId ?? null}, program_id)
+    WHERE user_id = ${user.id} AND id = ${planId}
+  `;
+
   res.send();
 });
 

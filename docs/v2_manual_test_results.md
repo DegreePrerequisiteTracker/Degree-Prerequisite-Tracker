@@ -159,7 +159,7 @@ curl -X POST https://eciuedmxxubiurblwicm.supabase.co/auth/v1/token?grant_type=p
 
 User wants to create a plan, and mark courses as complete as they progress in their plan.
 
-1. `POST /plan/` create a new plan, EX:
+1. `POST /plans/` create a new plan, EX:
 
 ```json
 {
@@ -169,9 +169,9 @@ User wants to create a plan, and mark courses as complete as they progress in th
 }
 ```
 
-2. `PUT /user/history/{course_id}` mark a course as complete (happens at the user level, so it applies to all plans)
-3. `DELETE /user/history/{course_id}` optionally, mark a course as incomplete if it was mistakenly set as completed
-4. `DELETE /plan/{plan_id}/` delete the plan when it is no longer needed
+2. `PUT /users/history/{courseId}` mark a course as complete (happens at the user level, so it applies to all plans)
+3. `DELETE /users/history/{courseId}` optionally, mark a course as incomplete if it was mistakenly set as completed
+4. `DELETE /plans/{planId}/` delete the plan when it is no longer needed
 
 ### Testing results
 
@@ -215,12 +215,325 @@ curl -X DELETE 'https://degree-prerequisite-tracker.onrender.com/plans/1' \
 
 User wants to explore programs then select a different program for their previously created plan.
 
-1. `GET /department/` : gets a list of departments
-1. `GET /department/{department_id}/programs` : gets a list of programs available in a department
-1. `GET /program/{program_id}` : gets the details for a specific program
-1. `PUT /plan/{plan_id}` : updates previous plan with new program information
-1. `GET /plan/{plan_id}/courses` : gets a list of all courses required for this plan
+1. `GET /departments/` : gets a list of departments
+2. `GET /departments/{departmentId}/programs` : gets a list of programs available in a department
+3. `GET /programs/{programId}/concentrations` : gets a list of all concentrations available in a program
+4. `PUT /plans/{planId}` : updates previous plan with new program and concentration information
 
 ### Testing results
 
-TODO
+`curl https://degree-prerequisite-tracker.onrender.com/departments`
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Agribusiness",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 2,
+    "name": "Agricultural Education and Communication",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 3,
+    "name": "Animal Science",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 4,
+    "name": "BioResource and Agricultural Engineering",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 5,
+    "name": "Experience Industry Management",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 6,
+    "name": "Food Science and Nutrition",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 7,
+    "name": "Military Science",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 8,
+    "name": "Natural Resources Management and Environmental Sciences",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 9,
+    "name": "Plant Sciences",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 10,
+    "name": "Wine and Viticulture",
+    "prefix": "CAFES"
+  },
+  {
+    "id": 11,
+    "name": "Architectural Engineering",
+    "prefix": "CAED"
+  },
+  {
+    "id": 12,
+    "name": "Architecture",
+    "prefix": "CAED"
+  },
+  {
+    "id": 13,
+    "name": "City and Regional Planning",
+    "prefix": "CAED"
+  },
+  {
+    "id": 14,
+    "name": "Construction Management",
+    "prefix": "CAED"
+  },
+  {
+    "id": 15,
+    "name": "Landscape Architecture",
+    "prefix": "CAED"
+  },
+  {
+    "id": 17,
+    "name": "Aerospace Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 18,
+    "name": "Biomedical Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 19,
+    "name": "Civil and Environmental Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 20,
+    "name": "Computer Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 21,
+    "name": "Computer Science and Software Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 22,
+    "name": "Electrical Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 23,
+    "name": "General Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 24,
+    "name": "Industrial and Manufacturing Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 25,
+    "name": "Materials Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 26,
+    "name": "Mechanical Engineering",
+    "prefix": "CENG"
+  },
+  {
+    "id": 27,
+    "name": "Art and Design",
+    "prefix": "CLA"
+  },
+  {
+    "id": 28,
+    "name": "Communication Studies",
+    "prefix": "CLA"
+  },
+  {
+    "id": 29,
+    "name": "English",
+    "prefix": "CLA"
+  },
+  {
+    "id": 30,
+    "name": "Ethnic Studies",
+    "prefix": "CLA"
+  },
+  {
+    "id": 31,
+    "name": "Graphic Communication",
+    "prefix": "CLA"
+  },
+  {
+    "id": 32,
+    "name": "History",
+    "prefix": "CLA"
+  },
+  {
+    "id": 33,
+    "name": "Interdisciplinary Studies in the Liberal Arts",
+    "prefix": "CLA"
+  },
+  {
+    "id": 34,
+    "name": "Journalism",
+    "prefix": "CLA"
+  },
+  {
+    "id": 35,
+    "name": "Music",
+    "prefix": "CLA"
+  },
+  {
+    "id": 36,
+    "name": "Philosophy",
+    "prefix": "CLA"
+  },
+  {
+    "id": 37,
+    "name": "Political Science",
+    "prefix": "CLA"
+  },
+  {
+    "id": 38,
+    "name": "Psychology and Child Development",
+    "prefix": "CLA"
+  },
+  {
+    "id": 39,
+    "name": "Social Sciences",
+    "prefix": "CLA"
+  },
+  {
+    "id": 40,
+    "name": "Theatre and Dance",
+    "prefix": "CLA"
+  },
+  {
+    "id": 41,
+    "name": "Women's, Gender and Queer Studies",
+    "prefix": "CLA"
+  },
+  {
+    "id": 42,
+    "name": "World Languages and Cultures",
+    "prefix": "CLA"
+  },
+  {
+    "id": 43,
+    "name": "Biological Sciences",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 44,
+    "name": "Chemistry and Biochemistry",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 45,
+    "name": "Kinesiology and Public Health",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 46,
+    "name": "Liberal Studies",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 47,
+    "name": "Mathematics",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 48,
+    "name": "Physics",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 49,
+    "name": "Statistics",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 50,
+    "name": "School of Education",
+    "prefix": "COSAM"
+  },
+  {
+    "id": 16,
+    "name": "Orfalea College of Business",
+    "prefix": "COB"
+  }
+]
+```
+
+`curl https://degree-prerequisite-tracker.onrender.com/departments/21/programs`
+
+```json
+[
+  {
+    "id": 23,
+    "name": "Computer Science",
+    "type": "BS"
+  },
+  {
+    "id": 62,
+    "name": "Software Engineering",
+    "type": "BS"
+  }
+]
+```
+
+`curl https://degree-prerequisite-tracker.onrender.com/programs/23/concentrations`
+
+```json
+[
+  {
+    "id": "25",
+    "name": "General Curriculum in Computer Science"
+  },
+  {
+    "id": "26",
+    "name": "Artificial Intelligence and Machine Learning"
+  },
+  {
+    "id": "27",
+    "name": "Data Engineering"
+  },
+  {
+    "id": "28",
+    "name": "Game Development"
+  },
+  {
+    "id": "29",
+    "name": "Graphics"
+  },
+  {
+    "id": "30",
+    "name": "Privacy and Security"
+  }
+]
+```
+
+```bash
+curl -X PUT 'https://degree-prerequisite-tracker.onrender.com/plans/5' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer {authorization-token}' \
+-d '{"programId": 23, "concentrationId": 26}'
+```
+
+```
+200 OK
+```
