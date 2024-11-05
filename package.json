@@ -4,8 +4,8 @@
   "description": "Degree Prerequisite Tracker",
   "type": "module",
   "scripts": {
-    "lint": "prettier --check ./src && eslint",
-    "fix": "prettier ./src --write && eslint --fix",
+    "lint": "prettier --check ./src ./docs/*.yml && eslint",
+    "fix": "prettier ../src ./docs/*.yml --write && eslint --fix",
     "build": "tsc",
     "server": "tsc && node --env-file=.env ./build/main.js 3000",
     "release": "npm run build && npm run lint"
