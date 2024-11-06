@@ -12,13 +12,32 @@ interface Plan {
   concentration_id: number;
 }
 
-router.get("/plans", (req, res) => {
-  res.send({
-    planId: 1,
-    programId: 4505,
-    programType: "MS",
-    concentrationId: 3,
-  });
+interface PlanSummary {
+  id: number;
+  graduation_date: Date;
+  program_name: string;
+  concentration_name: string;
+}
+
+router.get("/plans", async (req, res) => {
+  const user = await authUser(req);
+
+  const plans = await sql<
+    PlanSummary[]
+  >`SELECT plans.id, graduation_date, programs.name AS program_name, concentrations.name AS concentration_name
+    FROM plans 
+    JOIN programs ON programs.id = program_id
+    JOIN concentrations ON concentrations.id = concentration_id
+    WHERE user_id = ${user.id}`;
+
+  res.send(
+    plans.map((userPlan) => ({
+      planId: userPlan.id,
+      graduationDate: userPlan.graduation_date,
+      programName: userPlan.program_name,
+      concentrationName: userPlan.concentration_name,
+    })),
+  );
 });
 
 const planReqBody = z.object({
