@@ -7,7 +7,7 @@
     "lint": "prettier --check ./src ./docs/*.yml && eslint",
     "fix": "prettier ./src ./docs/*.yml --write && eslint --fix",
     "build": "tsc",
-    "server": "tsc && node --env-file=.env ./build/main.js 3000",
+    "server": "tsc && node --env-file=.env --enable-source-maps ./build/main.js 3000",
     "release": "npm run build && npm run lint"
   },
   "devDependencies": {
