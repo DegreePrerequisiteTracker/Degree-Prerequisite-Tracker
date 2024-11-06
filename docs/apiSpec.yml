@@ -1,12 +1,465 @@
-openapi: '3.0.3'
+openapi: "3.1.1"
 info:
-  title: API Title
-  version: '1.0'
-servers:
-  - url: https://degree-prerequisite-tracker.onrender.com
+  title: Degree Prerequisite Tracker
+  description: "For all your degree planning needs!"
+  version: "1.0"
+  contact:
+    email: degreeprerequisitetracker@gmail.com
+
+tags:
+  - name: Sign Up/In
+  - name: Users
+  - name: Plans
+  - name: Departments
+  - name: Programs
+  - name: Subjects
+  - name: Courses
+
 paths:
-  /test:
-    get:
+  /signup:
+    servers:
+      - url: https://eciuedmxxubiurblwicm.supabase.co/auth/v1
+    post:
+      tags:
+        - Sign Up/In
+      summary: Create an account
+      description: Provide an email and password to create a permanent account, don't change Apikey. If you have a prexisting account please navigate to /token to generate access token.
+      parameters:
+        - name: Apikey
+          in: header
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@gmail.com
+                password:
+                  type: string
+                  example: password
       responses:
-        '200':
+        "200":
+          description: Copy the access token returned and paste into authorization located at top of page.
+        "422":
+          description: This email has already been registed to Degree Prerequisite Tracker OR entered a weak password (must be at least 6 characters).
+
+  /token:
+    servers:
+      - url: https://eciuedmxxubiurblwicm.supabase.co/auth/v1
+    post:
+      tags:
+        - Sign Up/In
+      summary: Sign into an account
+      description: Use email and password from a prexisting account to generate an access token, don't change Apikey.
+      parameters:
+        - name: Apikey
+          in: header
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM
+        - name: grant_type
+          in: query
+          required: true
+          schema:
+            type: string
+            default: password
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@gmail.com
+                password:
+                  type: string
+                  example: password
+
+      responses:
+        "200":
+          description: Copy the access token returned and paste into authorization located at top of page.
+        "400":
+          description: Invalid email or password.
+
+  /users/history/{courseId}:
+    put:
+      tags:
+        - Users
+      summary: Add a course to your course history
+      description: Add the id of a course that you want to mark as completed.
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1314
+
+      responses:
+        "200":
           description: OK
+        "400":
+          description: Invalid email or password.
+
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - Users
+      summary: Delete a course from your course history.
+      description: Add a course that the user has completed into their completed courses history
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1314
+
+      responses:
+        "200":
+          description: OK
+
+      security:
+        - bearerAuth: []
+
+  /plans:
+    get:
+      tags:
+        - Plans
+      summary: Get all of your plans
+      description: Retrieves all plans associaited with your account.
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  planId:
+                    type: integer
+                    example: 1
+                  graduationDate:
+                    type: string
+                    format: Date
+                    example: "2026-06-30"
+                  programName:
+                    type: string
+                    example: "Computer Science"
+                  concentrationName:
+                    type: string
+                    example: "Artificial Intelligence and Machine Learning"
+
+      security:
+        - bearerAuth: []
+
+    post:
+      tags:
+        - Plans
+      summary: Add a plan to your account
+      description: Takes in gradation date, a program id, and (optionally) a concentration id to create a new plan for your account.
+      requestBody:
+        description: OK
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/plan"
+                - properties:
+                    graduationDate:
+                      type: string
+                      format: date
+                      example: "2026-06-30"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  planId:
+                    type: integer
+                    example: 1
+      security:
+        - bearerAuth: []
+
+  /plans/{planId}:
+    put:
+      tags:
+        - Plans
+      summary: Get info for a plan
+      description: Retrieves relevant information given a plan id.
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+
+      requestBody:
+        description: OK
+        content:
+          application/json:
+            schema:
+              minProperties: 1
+              allOf:
+                - $ref: "#/components/schemas/plan"
+                - properties:
+                    graduationDate:
+                      type: string
+                      format: date
+                      example: "2026-06-30"
+      responses:
+        "200":
+          description: OK
+
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - Plans
+      summary: Delete a plan
+      description: Deletes a plan given a plan id.
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        "200":
+          description: OK
+
+      security:
+        - bearerAuth: []
+
+  /departments:
+    get:
+      tags:
+        - Departments
+      summary: View all departments
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/department"
+
+  /departments/{departmentId}/programs:
+    get:
+      tags:
+        - Departments
+      summary: View all programs in a department
+      description: Retrieves all programs in a speicifed department given a department id.
+      parameters:
+        - name: departmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 21
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/program"
+
+  /programs/{programId}/concentrations:
+    get:
+      tags:
+        - Programs
+      summary: View all concentrations in a program
+      description: Retrieves all concentrations in a specifed program given a program id.
+      parameters:
+        - name: programId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 23
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/concentration"
+
+  /subjects:
+    get:
+      tags:
+        - Subjects
+      summary: View all subjects
+      description: Retrieves the names and prefixes of all subjects.
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/subject"
+
+  /subjects/{prefix}/courses:
+    get:
+      tags:
+        - Subjects
+      summary: Get courses in a subject
+      description: Retrieves all courses given a subject prefix.
+      parameters:
+        - name: prefix
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "CSC"
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - properties:
+                        courseId:
+                          type: integer
+                          example: 1314
+                    - $ref: "#/components/schemas/course"
+
+  /courses/{courseId}:
+    get:
+      tags:
+        - Courses
+      summary: Get course information
+      description: Gets the name, course number, and description for a given course id.
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1314
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - properties:
+                        description:
+                          type: string
+                          example: "Basic principles of database management systems (DBMS) and of DBMS application development.  DBMS objectives, systems architecture, database models with emphasis on Entity-Relationship and Relational models, data definition and manipulation languages, the Structured Query Language (SQL), database design, application development tools.  Course may be offered in classroom-based or online format.  3 lectures, 1 laboratory."
+                    - $ref: "#/components/schemas/course"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    plan:
+      type: object
+      properties:
+        programId:
+          type: integer
+          example: 23
+        concentrationId:
+          type: integer
+          example: 26
+
+    department:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 21
+        name:
+          type: string
+          example: "Computer Science and Software Engineering"
+        college:
+          type: string
+          example: "CENG"
+
+    program:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 23
+        name:
+          type: string
+          example: "Computer Science"
+        type:
+          type: string
+          example: "BS"
+          enum:
+            - "BS"
+            - "BA"
+            - "BLA"
+            - "BFA"
+            - "BArch"
+
+    concentration:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 26
+        name:
+          type: string
+          example: "Artificial Intelligence and Machine Learning"
+
+    subject:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Computer Science"
+        prefix:
+          type: string
+          example: "CSC"
+
+    course:
+      type: object
+      properties:
+        courseName:
+          type: string
+          example: "Introduction to Database Systems"
+        courseNumber:
+          type: integer
+          example: 365
