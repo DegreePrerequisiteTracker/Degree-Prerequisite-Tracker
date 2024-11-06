@@ -229,252 +229,252 @@ User wants to explore programs then select a different program for their previou
   {
     "id": 1,
     "name": "Agribusiness",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 2,
     "name": "Agricultural Education and Communication",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 3,
     "name": "Animal Science",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 4,
     "name": "BioResource and Agricultural Engineering",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 5,
     "name": "Experience Industry Management",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 6,
     "name": "Food Science and Nutrition",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 7,
     "name": "Military Science",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 8,
     "name": "Natural Resources Management and Environmental Sciences",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 9,
     "name": "Plant Sciences",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 10,
     "name": "Wine and Viticulture",
-    "prefix": "CAFES"
+    "college": "CAFES"
   },
   {
     "id": 11,
     "name": "Architectural Engineering",
-    "prefix": "CAED"
+    "college": "CAED"
   },
   {
     "id": 12,
     "name": "Architecture",
-    "prefix": "CAED"
+    "college": "CAED"
   },
   {
     "id": 13,
     "name": "City and Regional Planning",
-    "prefix": "CAED"
+    "college": "CAED"
   },
   {
     "id": 14,
     "name": "Construction Management",
-    "prefix": "CAED"
+    "college": "CAED"
   },
   {
     "id": 15,
     "name": "Landscape Architecture",
-    "prefix": "CAED"
+    "college": "CAED"
   },
   {
     "id": 17,
     "name": "Aerospace Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 18,
     "name": "Biomedical Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 19,
     "name": "Civil and Environmental Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 20,
     "name": "Computer Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 21,
     "name": "Computer Science and Software Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 22,
     "name": "Electrical Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 23,
     "name": "General Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 24,
     "name": "Industrial and Manufacturing Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 25,
     "name": "Materials Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 26,
     "name": "Mechanical Engineering",
-    "prefix": "CENG"
+    "college": "CENG"
   },
   {
     "id": 27,
     "name": "Art and Design",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 28,
     "name": "Communication Studies",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 29,
     "name": "English",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 30,
     "name": "Ethnic Studies",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 31,
     "name": "Graphic Communication",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 32,
     "name": "History",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 33,
     "name": "Interdisciplinary Studies in the Liberal Arts",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 34,
     "name": "Journalism",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 35,
     "name": "Music",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 36,
     "name": "Philosophy",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 37,
     "name": "Political Science",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 38,
     "name": "Psychology and Child Development",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 39,
     "name": "Social Sciences",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 40,
     "name": "Theatre and Dance",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 41,
     "name": "Women's, Gender and Queer Studies",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 42,
     "name": "World Languages and Cultures",
-    "prefix": "CLA"
+    "college": "CLA"
   },
   {
     "id": 43,
     "name": "Biological Sciences",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 44,
     "name": "Chemistry and Biochemistry",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 45,
     "name": "Kinesiology and Public Health",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 46,
     "name": "Liberal Studies",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 47,
     "name": "Mathematics",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 48,
     "name": "Physics",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 49,
     "name": "Statistics",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 50,
     "name": "School of Education",
-    "prefix": "COSAM"
+    "college": "COSAM"
   },
   {
     "id": 16,
     "name": "Orfalea College of Business",
-    "prefix": "COB"
+    "college": "COB"
   }
 ]
 ```
