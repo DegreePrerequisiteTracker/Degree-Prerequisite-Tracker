@@ -17,6 +17,12 @@ The database would automatically write in information from Cal Poly’s course c
 
 We will also have analyis logic for suggesting a priority for courses based on a number of factors (number of prerequisites, if the course is required to graduate, etc.). This will help students choose which courses to prioritize, and allow them to build a full degree plan.
 
+### Testing Endpoints
+
+If you prefer to use a docs page to test endpoints rather than curl, navigate here.
+
+https://degree-prerequisite-tracker.onrender.com/
+
 ## Development
 
 ### Setup
