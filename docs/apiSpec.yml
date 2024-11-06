@@ -30,7 +30,8 @@ paths:
           required: true
           schema:
             type: string
-            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM
+            enum:
+              - "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM"
       requestBody:
         content:
           application/json:
@@ -42,7 +43,8 @@ paths:
                   example: example@gmail.com
                 password:
                   type: string
-                  example: password
+                  enum:
+                    - "password"
       responses:
         "200":
           description: Copy the access token returned and paste into authorization located at top of page.
@@ -63,13 +65,15 @@ paths:
           required: true
           schema:
             type: string
-            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM
+            enum:
+              - "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaXVlZG14eHViaXVyYmx3aWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Nzg4MzgsImV4cCI6MjA0NTU1NDgzOH0.4Yj5yja7Phb6880eMh46WyyNJSfaHNLaOhPvlNkzuHM"
         - name: grant_type
           in: query
           required: true
           schema:
             type: string
-            default: password
+            enum:
+              - "password"
 
       requestBody:
         content:
