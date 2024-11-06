@@ -23,7 +23,7 @@ router.get("/departments", async (req, res) => {
     departments.map((department) => ({
       id: department.id,
       name: department.name,
-      prefix: department.college_prefix,
+      college: department.college_prefix,
     })),
   );
 });
@@ -37,7 +37,7 @@ router.get("/departments/:departmentId", async (req, res) => {
 
   res.send({
     name: department.name,
-    prefix: department.college_prefix,
+    college: department.college_prefix,
   });
 });
 
