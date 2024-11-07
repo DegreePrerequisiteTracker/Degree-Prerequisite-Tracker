@@ -9,7 +9,7 @@ import docs from "./api/docs.js";
 
 export function createRoutes(app: Express) {
   // New routes need to be added to this array in order to work
-  const routes = [users, subjects, courses, programs, plans, docs, departments];
+  const routes = [users, subjects, courses, programs, plans, departments, docs];
 
   routes.forEach((route) => app.use(route));
 }
