@@ -326,3 +326,63 @@ Gets a list of all courses in a plan.
   // ...
 ]
 ```
+
+#### `GET /plan/{plan_id}/recommendations`
+
+Get a list courses for the user to take next based on completed courses, prerequisites, and term availability.
+
+#### Response:
+
+```ts
+[
+  {
+    "name": string, /* Course name from catalog e.g. "Fundamentals of Computer Science" */
+    "course_number": number, /* Course number e.g. 101 */
+    "units": number, /* Amount of units for course */
+    "prerequisites": [
+      {
+        "needed": number,
+        "courses:": number[] /* Instances where you are able to take one course OR another course */
+      }
+    ],
+    "offered": ["F", "W", "SP", "SU"], /* Terms when course is offered */
+    "description": string /* Description taken from catalog */
+  }
+  // ...
+]
+```
+
+#### `GET /user/progress/{plan_id}`
+
+Get an overview of the user's progress in a program, including remaining requirements, completed requirements, and units completed.
+
+```ts
+{
+  "total_units": number, /* Total number of units required for the program */
+  "completed_units": number, /* Number of units completed by the user */
+  "remaining_units": number, /* Number of units remaining */
+  "completed_courses": [
+    {
+      "name": string,
+      "course_number": number,
+      "units": number
+    }
+    // ...
+  ],
+  "remaining_courses": [
+    {
+      "name": string,
+      "course_number": number,
+      "units": number,
+      "prerequisites": [
+        {
+          "needed": number,
+          "courses:": number[]
+        }
+      ]
+    }
+    // ...
+  ]
+}
+
+```
