@@ -19,6 +19,17 @@ interface PlanSummary {
   concentration_name: string;
 }
 
+interface PlanInfo{
+  course: number;
+  set: number;
+  prereq: number;
+}
+
+interface CourseInfo{
+  course: number,
+  prerequisites: { "needed": number; "courses": number[]; }[]
+}
+
 router.get("/plans", async (req, res) => {
   const user = await authUser(req);
 
@@ -96,19 +107,53 @@ router.delete("/plans/:planId", async (req, res) => {
   res.send();
 });
 
-router.get("/plans/:planId/courses", (req, res) => {
-  res.send({
-    courseName: "string",
-    courseNumber: 4056,
-    units: 4,
-    crosslisted: 53,
-    prerequisites: [
-      {
-        needed: 3,
-        "courses:": [12, 52, 236],
-      },
-    ],
-    offered: ["F", "W", "SP", "SU"],
-    description: "course description",
+router.get("/plans/:planId/courses", async (req, res) => {
+  const planCourses = await sql<PlanInfo[]>`
+    WITH recursive R AS(
+    SELECT program_courses.course_id as Course FROM plans
+    JOIN programs on plans.program_id = programs.id
+    JOIN program_courses ON programs.id = program_courses.program_id
+    WHERE plans.id = ${req.params.planId}
+    UNION ALL
+    SELECT prerequisite_course_sets.course_id AS Course FROM R
+    JOIN course_prerequisites ON course_prerequisites.course_id = Course
+    JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number 
+  )
+  SELECT Distinct Course, course_prerequisites.set_number AS set, prerequisite_course_sets.course_id FROM R
+  left JOIN course_prerequisites ON Course = course_prerequisites.course_id
+  left JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number
+  ORDER BY Course, set`
+  ;
+  const plan: CourseInfo[] = [];
+  let coursenum: number = planCourses[0].course;
+  const prevset: number = planCourses[0].set;
+  let prereqGroup: { "needed": number; "courses": number[]; }[] = [];
+  let prereqs: number[];
+  const courseInfo: CourseInfo = {
+    "course": coursenum,
+    "prerequisites": prereqGroup,
+  };
+  planCourses.forEach(element => {
+    if (element.course !== coursenum){
+      courseInfo.prerequisites = prereqGroup;
+      prereqGroup = []
+      plan.push(courseInfo);
+      coursenum = element.course;
+      courseInfo.course = coursenum;
+      courseInfo.prerequisites = [];
+    }
+    else if (element.set !== prevset){
+      prereqGroup.push({
+      "needed": prereqs.length,
+      "courses": prereqs
+      });
+      prereqs = [];
+    }
+    else{
+      if (element.prereq !== null && element.set !== null){
+      prereqs.push(element.prereq)
+      }
+    }
   });
+  res.send(plan);
 });
