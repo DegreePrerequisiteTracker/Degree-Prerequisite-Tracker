@@ -354,35 +354,15 @@ Get a list courses for the user to take next based on completed courses, prerequ
 
 #### `GET /user/progress/{plan_id}`
 
-Get an overview of the user's progress in a program, including remaining requirements, completed requirements, and units completed.
+Get a count of total units, total units completed and total remaining units
 
 ```ts
 {
   "total_units": number, /* Total number of units required for the program */
   "completed_units": number, /* Number of units completed by the user */
   "remaining_units": number, /* Number of units remaining */
-  "completed_courses": [
-    {
-      "name": string,
-      "course_number": number,
-      "units": number
-    }
-    // ...
-  ],
-  "remaining_courses": [
-    {
-      "name": string,
-      "course_number": number,
-      "units": number,
-      "prerequisites": [
-        {
-          "needed": number,
-          "courses:": number[]
-        }
-      ]
-    }
-    // ...
-  ]
+  "completed_courses_count": number, /* Number of courses completed by user */
+  "remaining_courses_count": number, /* Number of courses remaining */
 }
 
 ```

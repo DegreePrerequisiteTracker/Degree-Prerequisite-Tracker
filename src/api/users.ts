@@ -32,3 +32,43 @@ router.delete("/users/history/:courseId", async (req, res) => {
   await sql`DELETE FROM courses_completed WHERE user_id = ${user.id} AND course_id = ${courseId}`;
   res.send();
 });
+
+router.get("/users/progress/:planId", async (req, res) => {
+  
+  const user = await authUser(req);
+  const planId = req.params.planId;
+
+  const planDetails = await sql`
+    SELECT pr.total_units, pr.required_courses FROM plans p
+    JOIN programs pr ON pr.id = p.program_id
+    WHERE p.id = ${planId} AND p.user_id = ${user.id}`;
+    
+  const { total_units, required_courses } = planDetails[0];
+
+  const completedCourses = await sql`
+    SELECT COUNT(*) AS completed_count
+    FROM courses_completed cc
+    WHERE cc.user_id = ${user.id} AND cc.course_id = ANY (${required_courses})`;
+
+  const completedCount = completedCourses[0].completed_count;
+
+  const totalCourses = required_courses.length;
+  const remainingCourses = totalCourses - completedCount;
+
+  const completedUnitsQuery = await sql`
+    SELECT COALESCE(SUM(c.units), 0) AS completed_units
+    FROM courses_completed cc
+    JOIN courses c ON cc.course_id = c.id
+    WHERE cc.user_id = ${user.id} AND cc.course_id = ANY (${required_courses})`;
+
+  const completedUnits = completedUnitsQuery[0].completed_units || 0;
+  const remainingUnits = total_units - completedUnits;
+
+  res.send({
+      total_units,
+      completed_units: completedUnits,
+      remaining_units: remainingUnits,
+      completed_courses_count: completedCount,
+      remaining_courses_count: remainingCourses,
+    });
+});
