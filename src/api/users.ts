@@ -52,9 +52,10 @@ router.get("/users/progress/:planId", async (req, res) => {
 
   await sql.begin(async (sql) => {
     const planDetails = await oneOrNull<PlanDetails>(
-      sql`SELECT pr.total_units, pr.required_courses
+      sql`SELECT pr.total_units, prog_c.course_id
         FROM plans p
         JOIN programs pr ON pr.id = p.program_id
+        JOIN programs_courses prog_c ON prog_c.program_id = pr.id
         WHERE p.id = ${planId} AND p.user_id = ${user.id}`,
     );
 

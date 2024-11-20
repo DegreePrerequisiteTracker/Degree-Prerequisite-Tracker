@@ -24,6 +24,7 @@ create table
     department_id integer not null,
     constraint programs_pkey primary key (id),
     constraint programs_department_id_fkey foreign key (department_id) references departments (id) on update cascade on delete cascade
+    total_units integer null
   ) tablespace pg_default;
 
 create table
