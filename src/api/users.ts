@@ -34,7 +34,6 @@ router.delete("/users/history/:courseId", async (req, res) => {
 });
 
 router.get("/users/progress/:planId", async (req, res) => {
-  
   const user = await authUser(req);
   const planId = req.params.planId;
 
@@ -42,7 +41,7 @@ router.get("/users/progress/:planId", async (req, res) => {
     SELECT pr.total_units, pr.required_courses FROM plans p
     JOIN programs pr ON pr.id = p.program_id
     WHERE p.id = ${planId} AND p.user_id = ${user.id}`;
-    
+
   const { total_units, required_courses } = planDetails[0];
 
   const completedCourses = await sql`
@@ -65,10 +64,10 @@ router.get("/users/progress/:planId", async (req, res) => {
   const remainingUnits = total_units - completedUnits;
 
   res.send({
-      total_units,
-      completed_units: completedUnits,
-      remaining_units: remainingUnits,
-      completed_courses_count: completedCount,
-      remaining_courses_count: remainingCourses,
-    });
+    total_units,
+    completed_units: completedUnits,
+    remaining_units: remainingUnits,
+    completed_courses_count: completedCount,
+    remaining_courses_count: remainingCourses,
+  });
 });
