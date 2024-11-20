@@ -19,15 +19,15 @@ interface PlanSummary {
   concentration_name: string;
 }
 
-interface PlanInfo{
+interface PlanInfo {
   course: number;
   set: number;
   prereq: number;
 }
 
-interface CourseInfo{
-  course: number,
-  prerequisites: { "needed": number; "courses": number[]; }[]
+interface CourseInfo {
+  course: number;
+  prerequisites: { needed: number; courses: number[] }[];
 }
 
 router.get("/plans", async (req, res) => {
@@ -122,36 +122,33 @@ router.get("/plans/:planId/courses", async (req, res) => {
   SELECT Distinct Course, course_prerequisites.set_number AS set, prerequisite_course_sets.course_id FROM R
   left JOIN course_prerequisites ON Course = course_prerequisites.course_id
   left JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number
-  ORDER BY Course, set`
-  ;
+  ORDER BY Course, set`;
   const plan: CourseInfo[] = [];
   let coursenum: number = planCourses[0].course;
   const prevset: number = planCourses[0].set;
-  let prereqGroup: { "needed": number; "courses": number[]; }[] = [];
+  let prereqGroup: { needed: number; courses: number[] }[] = [];
   let prereqs: number[];
   const courseInfo: CourseInfo = {
-    "course": coursenum,
-    "prerequisites": prereqGroup,
+    course: coursenum,
+    prerequisites: prereqGroup,
   };
-  planCourses.forEach(element => {
-    if (element.course !== coursenum){
+  planCourses.forEach((element) => {
+    if (element.course !== coursenum) {
       courseInfo.prerequisites = prereqGroup;
-      prereqGroup = []
+      prereqGroup = [];
       plan.push(courseInfo);
       coursenum = element.course;
       courseInfo.course = coursenum;
       courseInfo.prerequisites = [];
-    }
-    else if (element.set !== prevset){
+    } else if (element.set !== prevset) {
       prereqGroup.push({
-      "needed": prereqs.length,
-      "courses": prereqs
+        needed: prereqs.length,
+        courses: prereqs,
       });
       prereqs = [];
-    }
-    else{
-      if (element.prereq !== null && element.set !== null){
-      prereqs.push(element.prereq)
+    } else {
+      if (element.prereq !== null && element.set !== null) {
+        prereqs.push(element.prereq);
       }
     }
   });
