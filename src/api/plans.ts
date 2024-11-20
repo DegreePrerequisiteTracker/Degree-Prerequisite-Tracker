@@ -110,46 +110,61 @@ router.delete("/plans/:planId", async (req, res) => {
 router.get("/plans/:planId/courses", async (req, res) => {
   const planCourses = await sql<PlanInfo[]>`
     WITH recursive R AS(
-    SELECT program_courses.course_id as Course FROM plans
+    SELECT program_courses.course_id as course FROM plans
     JOIN programs on plans.program_id = programs.id
     JOIN program_courses ON programs.id = program_courses.program_id
     WHERE plans.id = ${req.params.planId}
     UNION ALL
-    SELECT prerequisite_course_sets.course_id AS Course FROM R
-    JOIN course_prerequisites ON course_prerequisites.course_id = Course
+    SELECT prerequisite_course_sets.course_id AS course FROM R
+    JOIN course_prerequisites ON course_prerequisites.course_id = course
     JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number 
   )
-  SELECT Distinct Course, course_prerequisites.set_number AS set, prerequisite_course_sets.course_id FROM R
-  left JOIN course_prerequisites ON Course = course_prerequisites.course_id
+  SELECT Distinct course, course_prerequisites.set_number AS set, prerequisite_course_sets.course_id as prereq FROM R
+  left JOIN course_prerequisites ON course = course_prerequisites.course_id
   left JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number
-  ORDER BY Course, set`;
+  ORDER BY course, set`;
+  console.log("1");
   const plan: CourseInfo[] = [];
+  console.log(planCourses);
   let coursenum: number = planCourses[0].course;
-  const prevset: number = planCourses[0].set;
+  console.log("coursenum");
+  let prevset: number = planCourses[0].set;
+  console.log("4");
   let prereqGroup: { needed: number; courses: number[] }[] = [];
-  let prereqs: number[];
-  const courseInfo: CourseInfo = {
+  let prereqs: number[] = [];
+  let courseInfo: CourseInfo = {
     course: coursenum,
     prerequisites: prereqGroup,
   };
   planCourses.forEach((element) => {
+    console.log(element);
     if (element.course !== coursenum) {
+      prereqGroup.push({
+        needed: prereqs.length,
+        courses: prereqs,
+      });
       courseInfo.prerequisites = prereqGroup;
-      prereqGroup = [];
+      console.log("plan:" + plan.toString());
       plan.push(courseInfo);
       coursenum = element.course;
-      courseInfo.course = coursenum;
-      courseInfo.prerequisites = [];
+      prereqGroup = [];
+      prereqs = [];
+      courseInfo = {
+        course: coursenum,
+        prerequisites: prereqGroup,
+      };
     } else if (element.set !== prevset) {
       prereqGroup.push({
         needed: prereqs.length,
         courses: prereqs,
       });
+      prevset = element.set;
       prereqs = [];
-    } else {
-      if (element.prereq !== null && element.set !== null) {
-        prereqs.push(element.prereq);
-      }
+    }
+    console.log("check1, course: " + element.course.toString());
+    if (element.prereq !== null && element.set !== null) {
+      console.log("check2: " + prereqs.toString());
+      prereqs.push(element.prereq);
     }
   });
   res.send(plan);
