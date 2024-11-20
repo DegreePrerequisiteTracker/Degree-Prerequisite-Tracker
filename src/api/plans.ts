@@ -165,5 +165,11 @@ router.get("/plans/:planId/courses", async (req, res) => {
       prereqs.push(element.prereq);
     }
   });
+  prereqGroup.push({
+    needed: prereqs.length,
+    courses: prereqs,
+  });
+  courseInfo.prerequisites = prereqGroup;
+  plan.push(courseInfo);
   res.send(plan);
 });
