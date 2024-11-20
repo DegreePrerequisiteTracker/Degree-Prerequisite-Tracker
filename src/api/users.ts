@@ -6,8 +6,8 @@ const router = express.Router();
 export default router;
 
 interface PlanDetails {
-  total_units: number;
-  required_courses: number[];
+  totalUnits: number;
+  requiredCourses: number[];
 }
 
 interface CompletedCourses {
@@ -55,24 +55,25 @@ router.get("/users/progress/:planId", async (req, res) => {
       sql`SELECT pr.total_units, pr.required_courses
         FROM plans p
         JOIN programs pr ON pr.id = p.program_id
-        WHERE p.id = ${planId} AND p.user_id = ${user.id}`);
+        WHERE p.id = ${planId} AND p.user_id = ${user.id}`,
+    );
 
     if (!planDetails) {
-          throw new Error("Plan not found");
-        }
-    const { total_units, required_courses } = planDetails;
+      throw new Error("Plan not found");
+    }
+    const { totalUnits, requiredCourses } = planDetails;
 
     const completedCourses = await oneOrNull<CompletedCourses>(
       sql`
         SELECT COUNT(*) AS completed_count
         FROM courses_completed cc
-        WHERE cc.user_id = ${user.id} AND cc.course_id = ANY(${required_courses}::int[])
-      `
+        WHERE cc.user_id = ${user.id} AND cc.course_id = ANY(${requiredCourses}::int[])
+      `,
     );
 
     const completedCount = completedCourses ? completedCourses.completed_count : 0;
 
-    const totalCourses = required_courses.length;
+    const totalCourses = requiredCourses.length;
     const remainingCourses = totalCourses - completedCount;
 
     const completedUnitsQuery = await oneOrNull<CompletedUnitsQuery>(
@@ -80,19 +81,19 @@ router.get("/users/progress/:planId", async (req, res) => {
         SELECT COALESCE(SUM(c.units), 0) AS completed_units
         FROM courses_completed cc
         JOIN courses c ON cc.course_id = c.id
-        WHERE cc.user_id = ${user.id} AND cc.course_id = ANY(${required_courses}::int[])
-      `
+        WHERE cc.user_id = ${user.id} AND cc.course_id = ANY(${requiredCourses}::int[])
+      `,
     );
 
     const completedUnits = completedUnitsQuery ? completedUnitsQuery.completed_units : 0;
-    const remainingUnits = total_units - completedUnits;
+    const remainingUnits = totalUnits - completedUnits;
 
     res.send({
-        totalUnits: total_units,
-        completedUnits,
-        remainingUnits,
-        completedCoursesCount: completedCount,
-        remainingCoursesCount: remainingCourses,
-      });
+      totalUnits: totalUnits,
+      completedUnits,
+      remainingUnits,
+      completedCoursesCount: completedCount,
+      remainingCoursesCount: remainingCourses,
     });
   });
+});
