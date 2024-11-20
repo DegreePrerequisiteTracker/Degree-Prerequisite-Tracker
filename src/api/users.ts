@@ -44,33 +44,33 @@ router.get("/users/progress/:planId", async (req, res) => {
       JOIN programs pr ON pr.id = p.program_id
       WHERE p.id = ${planId} AND p.user_id = ${user.id}`;
 
-    const { total_units, required_courses } = planDetails[0];
+    const { totalUnits, requiredCourses } = planDetails[0];
 
     const completedCourses = await sql`
       SELECT COUNT(*) AS completed_count
       FROM courses_completed cc
-      WHERE cc.user_id = ${user.id} AND cc.course_id = ANY (${required_courses})`;
+      WHERE cc.user_id = ${user.id} AND cc.course_id = ${requiredCourses}`;
 
-    const completedCount = completedCourses[0].completed_count;
+    const completedCount = completedCourses[0].completedCount;
 
-    const totalCourses = required_courses.length;
+    const totalCourses = requiredCourses.length;
     const remainingCourses = totalCourses - completedCount;
 
     const completedUnitsQuery = await sql`
       SELECT COALESCE(SUM(c.units), 0) AS completed_units
       FROM courses_completed cc
       JOIN courses c ON cc.course_id = c.id
-      WHERE cc.user_id = ${user.id} AND cc.course_id = ANY (${required_courses})`;
+      WHERE cc.user_id = ${user.id} AND cc.course_id = ${requiredCourses}`;
 
-    const completedUnits = completedUnitsQuery[0].completed_units || 0;
-    const remainingUnits = total_units - completedUnits;
+    const completedUnits = completedUnitsQuery[0].completedUnits || 0;
+    const remainingUnits = totalUnits - completedUnits;
 
     return {
-      total_units,
-      completed_units: completedUnits,
-      remaining_units: remainingUnits,
-      completed_courses_count: completedCount,
-      remaining_courses_count: remainingCourses,
+      totalUnits,
+      completedUnits: completedUnits,
+      remainingUnits: remainingUnits,
+      completedCoursescount: completedCount,
+      remainingCoursescount: remainingCourses,
     };
   });
 
