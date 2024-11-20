@@ -2,6 +2,7 @@ import express from "express";
 import { z } from "zod";
 import sql, { one } from "../database.js";
 import { authUser } from "../auth.js";
+import createHttpError from "http-errors";
 
 const router = express.Router();
 export default router;
@@ -123,13 +124,13 @@ router.get("/plans/:planId/courses", async (req, res) => {
   left JOIN course_prerequisites ON course = course_prerequisites.course_id
   left JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number
   ORDER BY course, set`;
-  console.log("1");
+
+  if (planCourses.length === 0) {
+    throw createHttpError.NotFound(`No plan with ID ${req.params.planId}`);
+  }
   const plan: CourseInfo[] = [];
-  console.log(planCourses);
   let coursenum: number = planCourses[0].course;
-  console.log("coursenum");
   let prevset: number = planCourses[0].set;
-  console.log("4");
   let prereqGroup: { needed: number; courses: number[] }[] = [];
   let prereqs: number[] = [];
   let courseInfo: CourseInfo = {
@@ -137,18 +138,17 @@ router.get("/plans/:planId/courses", async (req, res) => {
     prerequisites: prereqGroup,
   };
   planCourses.forEach((element) => {
-    console.log(element);
     if (element.course !== coursenum) {
       prereqGroup.push({
         needed: prereqs.length,
         courses: prereqs,
       });
       courseInfo.prerequisites = prereqGroup;
-      console.log("plan:" + plan.toString());
       plan.push(courseInfo);
       coursenum = element.course;
       prereqGroup = [];
       prereqs = [];
+      prevset = element.set;
       courseInfo = {
         course: coursenum,
         prerequisites: prereqGroup,
@@ -161,9 +161,7 @@ router.get("/plans/:planId/courses", async (req, res) => {
       prevset = element.set;
       prereqs = [];
     }
-    console.log("check1, course: " + element.course.toString());
     if (element.prereq !== null && element.set !== null) {
-      console.log("check2: " + prereqs.toString());
       prereqs.push(element.prereq);
     }
   });
