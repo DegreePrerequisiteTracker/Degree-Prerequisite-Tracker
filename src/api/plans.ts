@@ -109,12 +109,13 @@ router.delete("/plans/:planId", async (req, res) => {
 });
 
 router.get("/plans/:planId/courses", async (req, res) => {
+  const user = await authUser(req);
+
   const planCourses = await sql<PlanInfo[]>`
     WITH recursive R AS(
     SELECT program_courses.course_id as course FROM plans
-    JOIN programs on plans.program_id = programs.id
-    JOIN program_courses ON programs.id = program_courses.program_id
-    WHERE plans.id = ${req.params.planId}
+    JOIN program_courses ON plans.program_id = program_courses.program_id
+    WHERE plans.id = ${req.params.planId} AND plans.user_id = ${user.id}
     UNION ALL
     SELECT prerequisite_course_sets.course_id AS course FROM R
     JOIN course_prerequisites ON course_prerequisites.course_id = course
@@ -133,26 +134,20 @@ router.get("/plans/:planId/courses", async (req, res) => {
   let prevset: number = planCourses[0].set;
   let prereqGroup: { needed: number; courses: number[] }[] = [];
   let prereqs: number[] = [];
-  let courseInfo: CourseInfo = {
-    course: coursenum,
-    prerequisites: prereqGroup,
-  };
   planCourses.forEach((element) => {
     if (element.course !== coursenum) {
       prereqGroup.push({
         needed: prereqs.length,
         courses: prereqs,
       });
-      courseInfo.prerequisites = prereqGroup;
-      plan.push(courseInfo);
+      plan.push({
+        course: coursenum,
+        prerequisites: prereqGroup
+      });
       coursenum = element.course;
       prereqGroup = [];
       prereqs = [];
       prevset = element.set;
-      courseInfo = {
-        course: coursenum,
-        prerequisites: prereqGroup,
-      };
     } else if (element.set !== prevset) {
       prereqGroup.push({
         needed: prereqs.length,
@@ -169,7 +164,9 @@ router.get("/plans/:planId/courses", async (req, res) => {
     needed: prereqs.length,
     courses: prereqs,
   });
-  courseInfo.prerequisites = prereqGroup;
-  plan.push(courseInfo);
+  plan.push({
+    course: coursenum,
+    prerequisites: prereqGroup
+  });
   res.send(plan);
 });
