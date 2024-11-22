@@ -142,7 +142,7 @@ router.get("/plans/:planId/courses", async (req, res) => {
       });
       plan.push({
         course: coursenum,
-        prerequisites: prereqGroup
+        prerequisites: prereqGroup,
       });
       coursenum = element.course;
       prereqGroup = [];
@@ -166,7 +166,7 @@ router.get("/plans/:planId/courses", async (req, res) => {
   });
   plan.push({
     course: coursenum,
-    prerequisites: prereqGroup
+    prerequisites: prereqGroup,
   });
   res.send(plan);
 });
