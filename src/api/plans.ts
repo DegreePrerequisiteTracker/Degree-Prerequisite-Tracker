@@ -22,13 +22,13 @@ interface PlanSummary {
 
 interface PlanInfo {
   course: number;
-  set: number;
-  prereq: number;
+  set: number | null;
+  prereq: number | null;
 }
 
 interface CourseInfo {
   course: number;
-  prerequisites: { needed: number; courses: number[] }[];
+  prerequisites: number[][];
 }
 
 router.get("/plans", async (req, res) => {
@@ -131,15 +131,12 @@ router.get("/plans/:planId/courses", async (req, res) => {
   }
   const plan: CourseInfo[] = [];
   let coursenum: number = planCourses[0].course;
-  let prevset: number = planCourses[0].set;
-  let prereqGroup: { needed: number; courses: number[] }[] = [];
+  let prevset: number | null = planCourses[0].set;
+  let prereqGroup: number[][] = [];
   let prereqs: number[] = [];
   planCourses.forEach((element) => {
     if (element.course !== coursenum) {
-      prereqGroup.push({
-        needed: prereqs.length,
-        courses: prereqs,
-      });
+      prereqGroup.push(prereqs);
       plan.push({
         course: coursenum,
         prerequisites: prereqGroup,
@@ -149,10 +146,7 @@ router.get("/plans/:planId/courses", async (req, res) => {
       prereqs = [];
       prevset = element.set;
     } else if (element.set !== prevset) {
-      prereqGroup.push({
-        needed: prereqs.length,
-        courses: prereqs,
-      });
+      prereqGroup.push(prereqs);
       prevset = element.set;
       prereqs = [];
     }
@@ -160,10 +154,7 @@ router.get("/plans/:planId/courses", async (req, res) => {
       prereqs.push(element.prereq);
     }
   });
-  prereqGroup.push({
-    needed: prereqs.length,
-    courses: prereqs,
-  });
+  prereqGroup.push(prereqs);
   plan.push({
     course: coursenum,
     prerequisites: prereqGroup,
