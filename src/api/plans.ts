@@ -2,6 +2,7 @@ import express from "express";
 import { z } from "zod";
 import sql, { one } from "../database.js";
 import { authUser } from "../auth.js";
+import createHttpError from "http-errors";
 
 const router = express.Router();
 export default router;
@@ -17,6 +18,17 @@ interface PlanSummary {
   graduation_date: Date;
   program_name: string;
   concentration_name: string;
+}
+
+interface PlanInfo {
+  course: number;
+  set: number | null;
+  prereq: number | null;
+}
+
+interface CourseInfo {
+  course: number;
+  prerequisites: number[][];
 }
 
 router.get("/plans", async (req, res) => {
@@ -96,19 +108,56 @@ router.delete("/plans/:planId", async (req, res) => {
   res.send();
 });
 
-router.get("/plans/:planId/courses", (req, res) => {
-  res.send({
-    courseName: "string",
-    courseNumber: 4056,
-    units: 4,
-    crosslisted: 53,
-    prerequisites: [
-      {
-        needed: 3,
-        "courses:": [12, 52, 236],
-      },
-    ],
-    offered: ["F", "W", "SP", "SU"],
-    description: "course description",
+router.get("/plans/:planId/courses", async (req, res) => {
+  const user = await authUser(req);
+
+  const planCourses = await sql<PlanInfo[]>`
+    WITH recursive R AS(
+    SELECT program_courses.course_id as course FROM plans
+    JOIN program_courses ON plans.program_id = program_courses.program_id
+    WHERE plans.id = ${req.params.planId} AND plans.user_id = ${user.id}
+    UNION ALL
+    SELECT prerequisite_course_sets.course_id AS course FROM R
+    JOIN course_prerequisites ON course_prerequisites.course_id = course
+    JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number 
+  )
+  SELECT Distinct course, course_prerequisites.set_number AS set, prerequisite_course_sets.course_id as prereq FROM R
+  left JOIN course_prerequisites ON course = course_prerequisites.course_id
+  left JOIN prerequisite_course_sets ON course_prerequisites.set_number = prerequisite_course_sets.set_number
+  ORDER BY course, set`;
+
+  if (planCourses.length === 0) {
+    throw createHttpError.NotFound(`No plan with ID ${req.params.planId}`);
+  }
+  const plan: CourseInfo[] = [];
+  let coursenum: number = planCourses[0].course;
+  let prevset: number | null = planCourses[0].set;
+  let prereqGroup: number[][] = [];
+  let prereqs: number[] = [];
+  planCourses.forEach((element) => {
+    if (element.course !== coursenum) {
+      prereqGroup.push(prereqs);
+      plan.push({
+        course: coursenum,
+        prerequisites: prereqGroup,
+      });
+      coursenum = element.course;
+      prereqGroup = [];
+      prereqs = [];
+      prevset = element.set;
+    } else if (element.set !== prevset) {
+      prereqGroup.push(prereqs);
+      prevset = element.set;
+      prereqs = [];
+    }
+    if (element.prereq !== null && element.set !== null) {
+      prereqs.push(element.prereq);
+    }
   });
+  prereqGroup.push(prereqs);
+  plan.push({
+    course: coursenum,
+    prerequisites: prereqGroup,
+  });
+  res.send(plan);
 });
