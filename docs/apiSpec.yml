@@ -252,6 +252,46 @@ paths:
       security:
         - bearerAuth: []
 
+  /plans/{planId}/courses:
+    get:
+      tags:
+        - Plans
+      summary: See all courses needed to complete a plan
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    course:
+                      type: integer
+                      example: 1299
+                    prerequisites:
+                      type: array
+                      example: [[1238, 1294], [1294, 1312], [1238], [1312]]
+                      items:
+                        type: array
+                        items:
+                          type: integer
+        "404":
+          description: Not Found
+        "401":
+          description: Unauthorized
+
+      security:
+        - bearerAuth: []
+
   /departments:
     get:
       tags:
