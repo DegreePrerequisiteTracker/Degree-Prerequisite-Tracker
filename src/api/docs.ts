@@ -11,4 +11,5 @@ const appDir = dirname(import.meta.filename);
 const file = fs.readFileSync(`${appDir}/../../docs/apiSpec.yml`, "utf8");
 const swaggerDocument = YAML.parse(file) as object;
 
-router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+router.use("/", swaggerUi.serve);
+router.get("/", swaggerUi.setup(swaggerDocument));
