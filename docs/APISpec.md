@@ -186,27 +186,6 @@ Returns data about a specific concentration in a program.
 
 ## Users
 
-#### `POST /user/`
-
-Creates a new account.
-
-#### Request:
-
-```ts
-{
-  "username": string,
-  "email": string,
-}
-```
-
-#### Response:
-
-```ts
-{
-  "user_id": number
-}
-```
-
 #### `GET /user/history/`
 
 Retures completed courses on users profile.
