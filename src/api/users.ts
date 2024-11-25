@@ -5,12 +5,6 @@ import sql from "../database.js";
 const router = express.Router();
 export default router;
 
-router.post("/users", (req, res) => {
-  res.send({
-    userId: 5,
-  });
-});
-
 router.get("/users/history", (req, res) => {
   res.send({
     completedCourses: [12, 52, 236],
