@@ -420,14 +420,28 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  allOf:
-                    - properties:
-                        description:
-                          type: string
-                          example: "Basic principles of database management systems (DBMS) and of DBMS application development.  DBMS objectives, systems architecture, database models with emphasis on Entity-Relationship and Relational models, data definition and manipulation languages, the Structured Query Language (SQL), database design, application development tools.  Course may be offered in classroom-based or online format.  3 lectures, 1 laboratory."
-                    - $ref: "#/components/schemas/course"
+                properties:
+                  prefix:
+                    type: string
+                    example: "CSC"
+                  number:
+                    type: integer
+                    example: 365
+                  name:
+                    type: string
+                    example: "Introduction to Database Systems"
+                  description:
+                    type: string
+                    example: "Basic principles of database management systems (DBMS) and of DBMS application development. DBMS objectives, systems architecture, database models with emphasis on Entity-Relationship and Relational models, data definition and manipulation languages, the Structured Query Language (SQL), database design, application development tools.  Course may be offered in classroom-based or online format.  3 lectures, 1 laboratory."
+                  units:
+                    type: string
+                    example: "4"
+                  terms:
+                    type: array
+                    example: ["F", "W", "SP"]
+                  crosslisted:
+                    type: array
+                    example: []
 
 components:
   securitySchemes:

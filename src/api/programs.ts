@@ -18,7 +18,7 @@ router.get("/programs/:programId/concentrations", async (req, res) => {
     throw createHttpError.BadRequest("Program ID should be a number");
   }
 
-  const concentrations = await sql<Concentration[]>`
+  const concentrations = await sql<Pick<Concentration, "id" | "name">[]>`
     SELECT id, name FROM concentrations
     WHERE program_id = ${programId}
   `;
