@@ -455,9 +455,6 @@ components:
         name:
           type: string
           example: "Computer Science and Software Engineering"
-        college:
-          type: string
-          example: "CENG"
 
     program:
       type: object
