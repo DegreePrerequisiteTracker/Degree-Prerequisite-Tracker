@@ -5,7 +5,7 @@ import createHttpError from "http-errors";
 const router = express.Router();
 export default router;
 
-interface Course {
+export interface Course {
   id: number;
   prefix: string;
   number: number;
