@@ -1,33 +1,20 @@
 import express from "express";
 import sql, { oneOrNull } from "../database.js";
 import createHttpError from "http-errors";
+import { Courses } from "../schema.js";
 
 const router = express.Router();
 export default router;
 
-export interface Course {
-  id: number;
-  prefix: string;
-  number: number;
-  name: string;
-  description: string;
-  min_units: number | null;
-  max_units: number;
-  fall: boolean;
-  winter: boolean;
-  spring: boolean;
-  summer: boolean;
-}
-
 router.get("/courses/:courseId", async (req, res) => {
   const courseId = Number(req.params.courseId);
 
-  if (Number.isNaN(courseId)) {
+  if (isNaN(courseId)) {
     throw createHttpError.BadRequest("Course ID should be a number");
   }
 
-  const course = await oneOrNull(sql<Course[]>`
-    SELECT id, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer
+  const course = await oneOrNull(sql<Courses[]>`
+    SELECT id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr
     FROM courses
     WHERE id = ${courseId}
   `);
@@ -36,7 +23,7 @@ router.get("/courses/:courseId", async (req, res) => {
     throw createHttpError.NotFound(`No course with ID ${courseId}`);
   }
 
-  const crosslisted = await sql<Pick<Course, "id" | "prefix" | "number">[]>`
+  const crosslisted = await sql<Pick<Courses, "id" | "prefix" | "number">[]>`
     SELECT id, prefix, number FROM courses
     WHERE set_number = (SELECT set_number FROM courses WHERE id = ${courseId}) AND id != ${courseId}
   `;
@@ -52,6 +39,8 @@ router.get("/courses/:courseId", async (req, res) => {
     units: units,
     terms: terms,
     crosslisted: crosslisted,
+    uscp: course.uscp,
+    gwr: course.gwr,
   });
 });
 

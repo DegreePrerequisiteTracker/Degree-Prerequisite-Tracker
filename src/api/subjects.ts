@@ -1,6 +1,6 @@
 import express from "express";
 import sql from "../database.js";
-import { Course } from "../api/courses.js";
+import { Courses } from "../schema.js";
 import createHttpError from "http-errors";
 
 const router = express.Router();
@@ -29,8 +29,8 @@ router.get("/subjects", async (req, res) => {
 router.get("/subjects/:prefix/courses", async (req, res) => {
   const prefix = req.params.prefix.toUpperCase();
 
-  const courses = await sql<Pick<Course, "id" | "name" | "number">[]>`
-  SELECT id, name, number FROM courses WHERE prefix = ${prefix}
+  const courses = await sql<Pick<Courses, "id" | "name" | "number">[]>`
+    SELECT id, name, number FROM courses WHERE prefix = ${prefix}
   `;
 
   if (courses.length === 0) {
