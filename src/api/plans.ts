@@ -1,6 +1,6 @@
 import express from "express";
 import { z } from "zod";
-import sql, { one } from "../database.js";
+import sql, { one, oneOrNull } from "../database.js";
 import { authUser } from "../auth.js";
 import createHttpError from "http-errors";
 
@@ -71,11 +71,20 @@ router.post("/plans", async (req, res) => {
 
 router.get("/plans/:planId", async (req, res) => {
   const user = await authUser(req);
-  const planId = req.params.planId;
+  const planId = Number(req.params.planId);
 
-  const userPlan = await one<Plan>(
-    sql`SELECT graduation_date, concentration_id, program_id FROM plans WHERE user_id = ${user.id} AND id = ${planId}`,
-  );
+  if (isNaN(planId)) {
+    throw createHttpError.BadRequest("Plan ID should be a number");
+  }
+
+  const userPlan = await oneOrNull<Plan>(sql`
+    SELECT graduation_date, concentration_id, program_id FROM user_plans
+    WHERE user_id = ${user.id} AND id = ${planId}
+  `);
+
+  if (!userPlan) {
+    throw createHttpError.NotFound(`No plan with ID ${req.params.planId}`);
+  }
 
   res.send({
     graduationDate: userPlan.graduation_date,
