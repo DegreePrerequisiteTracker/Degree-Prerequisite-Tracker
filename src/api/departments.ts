@@ -1,24 +1,13 @@
 import express from "express";
 import sql from "../database.js";
 import createHttpError from "http-errors";
+import { Departments, Programs } from "../schema.js";
 
 const router = express.Router();
 export default router;
 
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Program {
-  id: number;
-  department_id: number;
-  name: string;
-  type: string;
-}
-
 router.get("/departments", async (req, res) => {
-  const departments = await sql<Department[]>`
+  const departments = await sql<Pick<Departments, "id" | "name">[]>`
     SELECT id, name FROM departments
   `;
 
@@ -37,7 +26,7 @@ router.get("/departments/:departmentId/programs", async (req, res) => {
     throw createHttpError.BadRequest("Department ID should be a number");
   }
 
-  const programs = await sql<Pick<Program, "id" | "name" | "type">[]>`
+  const programs = await sql<Pick<Programs, "id" | "name" | "type">[]>`
     SELECT id, name, type FROM programs
     WHERE department_id = ${departmentId}
   `;

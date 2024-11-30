@@ -9,7 +9,7 @@ export interface CourseSets {
 
 export interface GESubareas {
   subarea: string /* primary key */;
-  name?: string;
+  name: string | null;
   area: string /* foreign key to ge_areas.area */;
 }
 
@@ -50,7 +50,7 @@ export interface CourseStringRequisiteSets {
 
 export interface Subjects {
   prefix: string; // primary key
-  department_id?: number; // foreign key to departments.id
+  department_id: number | null; // foreign key to departments.id
   name: string;
 }
 
@@ -66,20 +66,20 @@ export interface Courses {
   number: number;
   name: string;
   description: string;
-  min_units?: number;
+  min_units: number | null;
   max_units: number;
-  fall?: boolean;
-  winter?: boolean;
-  spring?: boolean;
-  summer?: boolean;
-  set_number?: number; // foreign key to course_sets.set_number
+  fall: boolean;
+  winter: boolean;
+  spring: boolean;
+  summer: boolean;
+  set_number: number; // foreign key to course_sets.set_number
   uscp: boolean;
   gwr: boolean;
 }
 
 export interface ProgramRequirements {
   requirement_group: number; // primary key
-  min_units?: number;
+  min_units: number | null;
   max_units: number;
   program_id: number; // foreign key to programs.id
   header: string;
@@ -87,7 +87,7 @@ export interface ProgramRequirements {
 
 export interface UserPlans {
   id: number; // primary key
-  graduation_date?: string;
+  graduation_date: string | null;
   concentration_id: number; // foreign key to concentrations.id
   program_id: number; // foreign key to programs.id
   user_id: string;
@@ -108,7 +108,7 @@ export interface ProgramRequirementGEs {
   id: number; // primary key;
   requirement_group: number; // foreign key to program_requirements.requirement_group;
   ge_subarea: string; // foreign key to ge_subareas.subarea;
-  different_prefixs?: number;
+  different_prefixs: number | null;
 }
 
 export interface CourseRequisiteSets {

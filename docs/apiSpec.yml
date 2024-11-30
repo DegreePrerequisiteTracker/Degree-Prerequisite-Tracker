@@ -515,6 +515,12 @@ paths:
                   crosslisted:
                     type: array
                     example: []
+                  uscp:
+                    type: boolean
+                    example: false
+                  gwr:
+                    type: boolean
+                    example: false
 
 components:
   securitySchemes:
