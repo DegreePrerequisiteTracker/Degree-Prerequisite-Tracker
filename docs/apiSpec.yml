@@ -94,12 +94,69 @@ paths:
         "400":
           description: Invalid email or password.
 
-  /users/history/{courseId}:
+  /users/history:
+    get:
+      tags:
+        - Users
+      summary: Get your course history
+      description: Retrieves all of your completed courses.
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    courseId:
+                      type: integer
+                      example: 1314
+                    prefix:
+                      type: string
+                      example: CSC
+                    number:
+                      type: integer
+                      example: 365
+
+        "400":
+          description: Invalid email or password.
+
+      security:
+        - bearerAuth: []
+
     put:
       tags:
         - Users
-      summary: Add a course to your course history
-      description: Add the id of a course that you want to mark as completed.
+      summary: Adds courses to your course history
+      description: Add the courseIds that you want to mark as completed.
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+              example: [1135, 1164, 1189]
+
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid email or password.
+
+      security:
+        - bearerAuth: []
+
+  /users/history/{courseId}:
+    delete:
+      tags:
+        - Users
+      summary: Delete a course from your course history
+      description: Deletes a specified course from your course history.
       parameters:
         - name: courseId
           in: path
@@ -113,26 +170,6 @@ paths:
           description: OK
         "400":
           description: Invalid email or password.
-
-      security:
-        - bearerAuth: []
-
-    delete:
-      tags:
-        - Users
-      summary: Delete a course from your course history.
-      description: Add a course that the user has completed into their completed courses history
-      parameters:
-        - name: courseId
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1314
-
-      responses:
-        "200":
-          description: OK
 
       security:
         - bearerAuth: []
