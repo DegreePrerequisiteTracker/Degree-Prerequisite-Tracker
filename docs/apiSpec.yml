@@ -199,11 +199,45 @@ paths:
         - bearerAuth: []
 
   /plans/{planId}:
-    put:
+    get:
       tags:
         - Plans
       summary: Get info for a plan
       description: Retrieves relevant information given a plan id.
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  graduationDate:
+                    type: string
+                    format: date
+                    example: "2026-06-30"
+                  concentrationId:
+                    type: integer
+                    example: 23
+                  programId:
+                    type: integer
+                    example: 21
+
+      security:
+        - bearerAuth: []
+
+    put:
+      tags:
+        - Plans
+      summary: Modify info for an existing plan
+      description: Modifys specified fields of an existing plan.
       parameters:
         - name: planId
           in: path
