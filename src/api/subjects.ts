@@ -1,6 +1,7 @@
 import express from "express";
 import sql from "../database.js";
 import { Course } from "../api/courses.js";
+import createHttpError from "http-errors";
 
 const router = express.Router();
 export default router;
@@ -12,7 +13,9 @@ interface Subject {
 }
 
 router.get("/subjects", async (req, res) => {
-  const subjects = await sql<Subject[]>`SELECT department_id, name, prefix FROM subjects`;
+  const subjects = await sql<Subject[]>`
+    SELECT department_id, name, prefix FROM subjects
+  `;
 
   res.send(
     subjects.map((subject) => ({
@@ -24,11 +27,15 @@ router.get("/subjects", async (req, res) => {
 });
 
 router.get("/subjects/:prefix/courses", async (req, res) => {
-  const prefix = req.params.prefix;
+  const prefix = req.params.prefix.toUpperCase();
 
   const courses = await sql<Pick<Course, "id" | "name" | "number">[]>`
   SELECT id, name, number FROM courses WHERE prefix = ${prefix}
   `;
+
+  if (courses.length === 0) {
+    throw createHttpError.NotFound(`No courses associated with prefix "${prefix}" `);
+  }
 
   res.send(
     courses.map((course) => ({
