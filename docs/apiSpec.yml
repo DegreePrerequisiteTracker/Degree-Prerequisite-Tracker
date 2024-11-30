@@ -400,6 +400,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/program"
+        "404":
+          description: "No programs associated with entered depatmentId"
 
   /programs/{programId}/concentrations:
     get:

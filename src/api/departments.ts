@@ -1,5 +1,6 @@
 import express from "express";
 import sql from "../database.js";
+import createHttpError from "http-errors";
 
 const router = express.Router();
 export default router;
@@ -30,12 +31,20 @@ router.get("/departments", async (req, res) => {
 });
 
 router.get("/departments/:departmentId/programs", async (req, res) => {
-  const departmentId = req.params.departmentId;
+  const departmentId = Number(req.params.departmentId);
+
+  if (isNaN(departmentId)) {
+    throw createHttpError.BadRequest("Department ID should be a number");
+  }
 
   const programs = await sql<Pick<Program, "id" | "name" | "type">[]>`
     SELECT id, name, type FROM programs
     WHERE department_id = ${departmentId}
   `;
+
+  if (programs.length === 0) {
+    throw createHttpError.NotFound(`No programs associated with department ID ${departmentId}`);
+  }
 
   res.send(
     programs.map((program) => ({
