@@ -31,13 +31,13 @@ interface CourseInfo {
 router.get("/plans", async (req, res) => {
   const user = await authUser(req);
 
-  const plans = await sql<
-    PlanSummary[]
-  >`SELECT user_plans.id, graduation_date, programs.name AS program_name, concentrations.name AS concentration_name
+  const plans = await sql<PlanSummary[]>`
+    SELECT user_plans.id, graduation_date, programs.name AS program_name, concentrations.name AS concentration_name
     FROM user_plans
     JOIN programs ON programs.id = program_id
-    JOIN concentrations ON concentrations.id = concentration_id
-    WHERE user_id = ${user.id}`;
+    LEFT JOIN concentrations ON concentrations.id = concentration_id
+    WHERE user_id = ${user.id}
+  `;
 
   res.send(
     plans.map((userPlan) => ({
@@ -52,15 +52,17 @@ router.get("/plans", async (req, res) => {
 const planReqBody = z.object({
   graduationDate: z.string().date(),
   programId: z.number(),
-  concentrationId: z.number(),
+  concentrationId: z.number().nullable().optional(),
 });
 router.post("/plans", async (req, res) => {
   const user = await authUser(req);
   const planBody = planReqBody.parse(req.body);
 
-  const planId = await one<{ id: number }>(
-    sql`INSERT INTO user_plans (user_id, graduation_date, concentration_id, program_id) VALUES (${user.id}, ${planBody.graduationDate}, ${planBody.concentrationId}, ${planBody.programId}) RETURNING id`,
-  );
+  const planId = await one<{ id: number }>(sql`
+    INSERT INTO user_plans (user_id, graduation_date, concentration_id, program_id)
+    VALUES (${user.id}, ${planBody.graduationDate}, ${planBody.concentrationId ?? null}, ${planBody.programId})
+    RETURNING id
+  `);
   res.send({
     planId: planId.id,
   });
@@ -98,7 +100,13 @@ router.put("/plans/:planId", async (req, res) => {
   const result = await oneOrNull(sql`
     UPDATE user_plans SET
     graduation_date = COALESCE(${planBody.graduationDate ?? null}, graduation_date),
-    concentration_id = COALESCE(${planBody.concentrationId ?? null}, concentration_id),
+    ${
+      planBody.concentrationId === null
+        ? // If concentrationId is explicitly specified as null, remove the concentration from the plan
+          sql`concentration_id = NULL`
+        : // Update concentrationId if specified, keep old value if not in the payload
+          sql`concentration_id = COALESCE(${planBody.concentrationId ?? null}, concentration_id)`
+    },
     program_id = COALESCE(${planBody.programId ?? null}, program_id)
     WHERE user_id = ${user.id} AND id = ${planId}
     RETURNING id
