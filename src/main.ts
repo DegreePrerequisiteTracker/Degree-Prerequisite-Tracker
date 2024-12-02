@@ -1,11 +1,12 @@
 import express from "express";
 import { createRoutes } from "./routes.js";
+import { afterMiddleware, beforeMiddleware } from "./middleware.js";
 
 export const app = express();
 
-app.use(express.json());
-
+beforeMiddleware(app);
 createRoutes(app);
+afterMiddleware(app);
 
 // Start server
 const port = process.argv[2];
