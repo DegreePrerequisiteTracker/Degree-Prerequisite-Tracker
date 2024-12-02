@@ -4,6 +4,7 @@ import sql from "../database.js";
 import createHttpError from "http-errors";
 import { z } from "zod";
 import { Courses } from "../schema.js";
+import postgres from "postgres";
 
 const router = express.Router();
 export default router;
@@ -24,13 +25,19 @@ const userHistoryReqBody = z.array(z.number());
 router.put("/users/history", async (req, res) => {
   const user = await authUser(req);
   const courseIds = userHistoryReqBody.parse(req.body);
-
-  await sql`
+  try {
+    await sql`
     INSERT INTO user_course_history (user_id, course_id)
     SELECT ${user.id}, course_id FROM UNNEST(${courseIds}::int[]) AS course_id
     ON CONFLICT DO NOTHING
   `;
-
+  } catch (e) {
+    if (e instanceof postgres.PostgresError) {
+      throw createHttpError.NotFound("A provided Course Id is Invalid");
+    } else {
+      throw e;
+    }
+  }
   res.send();
 });
 
