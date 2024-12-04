@@ -23,5 +23,9 @@ router.get("/programs/:programId/concentrations", async (req, res) => {
     WHERE program_id = ${programId}
   `;
 
+  if (concentrations.length === 0) {
+    throw createHttpError.NotFound(`No concentrations associated with program ID ${programId}`);
+  }
+
   res.send(concentrations.map((concentration) => ({ id: concentration.id, name: concentration.name })));
 });
