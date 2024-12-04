@@ -13,10 +13,21 @@ router.get("/courses/:courseId", async (req, res) => {
     throw createHttpError.BadRequest("Course ID should be a number");
   }
 
-  const course = await oneOrNull(sql<Courses[]>`
-    SELECT id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr
-    FROM courses
-    WHERE id = ${courseId}
+  const course = await oneOrNull<Courses & { prerequisites: string[] }>(sql`
+    WITH primary_courses AS (
+      -- Remove crosslisted courses
+      SELECT DISTINCT ON (set_number) id, set_number FROM courses
+    ),
+    prereq_groups AS (
+      SELECT courses.id, courses.set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, course_requisite_sets.set_number AS prereq_set, STRING_AGG(primary_courses.id::text, ',') AS prereq_group FROM courses
+      JOIN course_requisites ON courses.set_number = course_requisites.course_set_number
+      JOIN course_requisite_sets ON course_requisites.set_number = course_requisite_sets.set_number
+      JOIN primary_courses ON course_requisite_sets.course_set_number = primary_courses.set_number
+      WHERE courses.id = ${courseId}
+      GROUP BY courses.id, courses.set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, course_requisite_sets.set_number
+    )
+    SELECT id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, ARRAY_AGG(prereq_group) AS prerequisites FROM prereq_groups
+    GROUP BY id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr
   `);
 
   if (!course) {
@@ -30,6 +41,7 @@ router.get("/courses/:courseId", async (req, res) => {
 
   const units = formatUnits(course.min_units, course.max_units);
   const terms = formatTerms(course.fall, course.winter, course.spring, course.summer);
+  const prereqs = course.prerequisites.map((group) => group.split(",").map(Number));
 
   res.send({
     prefix: course.prefix,
@@ -41,6 +53,7 @@ router.get("/courses/:courseId", async (req, res) => {
     crosslisted: crosslisted,
     uscp: course.uscp,
     gwr: course.gwr,
+    prereqs: prereqs,
   });
 });
 

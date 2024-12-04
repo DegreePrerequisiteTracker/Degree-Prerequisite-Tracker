@@ -542,6 +542,13 @@ paths:
                   gwr:
                     type: boolean
                     example: false
+                  prerequisites:
+                    type: array
+                    example: [[1294], [3111, 1223, 1289]]
+                    items:
+                      type: array
+                      items:
+                        type: integer
 
 components:
   securitySchemes:
