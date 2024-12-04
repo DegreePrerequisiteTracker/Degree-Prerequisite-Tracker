@@ -13,47 +13,70 @@ router.get("/courses/:courseId", async (req, res) => {
     throw createHttpError.BadRequest("Course ID should be a number");
   }
 
-  const course = await oneOrNull<Courses & { prerequisites: string[] }>(sql`
-    WITH primary_courses AS (
-      -- Remove crosslisted courses
-      SELECT DISTINCT ON (set_number) id, set_number FROM courses
-    ),
-    prereq_groups AS (
-      SELECT courses.id, courses.set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, course_requisite_sets.set_number AS prereq_set, STRING_AGG(primary_courses.id::text, ',') AS prereq_group FROM courses
-      JOIN course_requisites ON courses.set_number = course_requisites.course_set_number
-      JOIN course_requisite_sets ON course_requisites.set_number = course_requisite_sets.set_number
-      JOIN primary_courses ON course_requisite_sets.course_set_number = primary_courses.set_number
-      WHERE courses.id = ${courseId}
-      GROUP BY courses.id, courses.set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, course_requisite_sets.set_number
-    )
-    SELECT id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr, ARRAY_AGG(prereq_group) AS prerequisites FROM prereq_groups
-    GROUP BY id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr
-  `);
+  await sql.begin(async (sql) => {
+    const course = await oneOrNull(sql<Courses[]>`
+      SELECT id, set_number, prefix, number, name, description, min_units, max_units, fall, winter, spring, summer, uscp, gwr
+      FROM courses
+      WHERE id = ${courseId}
+    `);
 
-  if (!course) {
-    throw createHttpError.NotFound(`No course with ID ${courseId}`);
-  }
+    if (!course) {
+      throw createHttpError.NotFound(`No course with ID ${courseId}`);
+    }
 
-  const crosslisted = await sql<Pick<Courses, "id" | "prefix" | "number">[]>`
-    SELECT id, prefix, number FROM courses
-    WHERE set_number = (SELECT set_number FROM courses WHERE id = ${courseId}) AND id != ${courseId}
-  `;
+    const prerequisites = await sql<{ prerequisites: string[] }[]>`
+      WITH primary_courses AS (
+        -- Remove crosslisted courses
+        SELECT DISTINCT ON (set_number) id, set_number FROM courses
+      ),
+      prereq_groups AS (
+        SELECT course_requisite_sets.set_number AS prereq_set, STRING_AGG(primary_courses.id::text, ',') AS prereq_group FROM courses
+        JOIN course_requisites ON courses.set_number = course_requisites.course_set_number
+        JOIN course_requisite_sets ON course_requisites.set_number = course_requisite_sets.set_number
+        JOIN primary_courses ON course_requisite_sets.course_set_number = primary_courses.set_number
+        WHERE courses.id = ${courseId}
+        GROUP BY course_requisite_sets.set_number
+      )
+      SELECT ARRAY_AGG(prereq_group) AS prerequisites FROM prereq_groups
+    `;
 
-  const units = formatUnits(course.min_units, course.max_units);
-  const terms = formatTerms(course.fall, course.winter, course.spring, course.summer);
-  const prereqs = course.prerequisites.map((group) => group.split(",").map(Number));
+    const crosslisted = await sql<Pick<Courses, "id" | "prefix" | "number">[]>`
+      SELECT id, prefix, number FROM courses
+      WHERE set_number = (SELECT set_number FROM courses WHERE id = ${courseId}) AND id != ${courseId}
+    `;
 
-  res.send({
-    prefix: course.prefix,
-    number: course.number,
-    name: course.name,
-    description: course.description,
-    units: units,
-    terms: terms,
-    crosslisted: crosslisted,
-    uscp: course.uscp,
-    gwr: course.gwr,
-    prereqs: prereqs,
+    const units = formatUnits(course.min_units, course.max_units);
+    const terms = formatTerms(course.fall, course.winter, course.spring, course.summer);
+
+    if (prerequisites[0].prerequisites === null) {
+      return res.send({
+        prefix: course.prefix,
+        number: course.number,
+        name: course.name,
+        description: course.description,
+        units: units,
+        terms: terms,
+        crosslisted: crosslisted,
+        uscp: course.uscp,
+        gwr: course.gwr,
+        prereqs: [],
+      });
+    }
+
+    const prereqs = prerequisites.map((group) => group.prerequisites.map((req) => req.split(",").map(Number)));
+
+    return res.send({
+      prefix: course.prefix,
+      number: course.number,
+      name: course.name,
+      description: course.description,
+      units: units,
+      terms: terms,
+      crosslisted: crosslisted,
+      uscp: course.uscp,
+      gwr: course.gwr,
+      prereqs: prereqs,
+    });
   });
 });
 
