@@ -363,6 +363,27 @@ paths:
       security:
         - bearerAuth: []
 
+  /plans/{planId}/progress:
+    get:
+      tags:
+        - Plans
+      summary: Get info for a plan
+      description: Retrieves relevant information given a plan id.
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        "200":
+          description: OK
+
+      security:
+        - bearerAuth: []
+
   /departments:
     get:
       tags:

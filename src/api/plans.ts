@@ -7,6 +7,11 @@ import createHttpError from "http-errors";
 const router = express.Router();
 export default router;
 
+interface PlanCourses {
+  courses: string[];
+  required_units: number;
+}
+
 interface Plan {
   graduation_date: Date;
   program_id: number;
@@ -185,4 +190,83 @@ router.get("/plans/:planId/courses", async (req, res) => {
       prerequisites: course.prerequisites,
     })),
   );
+});
+
+router.get("/plans/:planId/progress", async (req, res) => {
+  const user = await authUser(req);
+  const planId = Number(req.params.planId);
+
+  if (isNaN(planId)) {
+    throw createHttpError.BadRequest("Plan ID should be a number");
+  }
+
+  const programRequirements = await sql<PlanCourses[]>`
+    WITH user_courses AS (
+      SELECT DISTINCT
+        set_number AS completed
+      FROM
+        user_course_history AS uch
+        JOIN courses ON courses.id = course_id
+      WHERE
+        uch.user_id = ${user.id}
+    ), course_names AS (
+      SELECT DISTINCT ON (course_set_number)
+        prc.set_number,
+        pr.requirement_group,
+        prc.course_set_number,
+        prefix,
+        number,
+        c.id AS course_id,
+        pr.max_units / 10 AS units
+      FROM
+        program_requirements AS pr
+        JOIN program_requirement_sets AS prs ON prs.requirement_group = pr.requirement_group
+        JOIN program_requirement_courses AS prc ON prc.set_number = prs.set_number
+        JOIN courses AS c ON c.set_number = prc.course_set_number
+      WHERE
+        program_id = (SELECT program_id FROM user_plans WHERE user_id = ${user.id} AND id = ${planId})
+      ORDER BY
+        course_set_number,
+        prefix DESC,
+        pr.requirement_group,
+        prc.set_number
+    ), and_groups AS (
+      SELECT DISTINCT
+        set_number,
+        requirement_group,
+        units,
+        STRING_AGG(
+          prefix || '|' || number::TEXT || '|' || course_id::TEXT || '|' || 
+          (CASE WHEN completed IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END),
+          ','  -- Specify a delimiter here
+        ) AS ids
+      FROM
+        course_names
+        LEFT JOIN user_courses AS uc ON uc.completed = course_set_number
+      GROUP BY set_number, requirement_group, units
+    )
+    SELECT
+      ARRAY_AGG(ids) AS courses,
+      MAX(units) AS required_units
+    FROM and_groups
+    GROUP BY requirement_group;
+  `;
+
+  const result = programRequirements.map((requirement) => ({
+    requiredUnits: requirement.required_units,
+    courses: requirement.courses.map((courseGroup) =>
+      courseGroup.split(",").map((course) => {
+        const [prefix, number, courseId, completed] = course.split("|");
+
+        return {
+          prefix,
+          number,
+          courseId,
+          completed: completed === "TRUE",
+        };
+      }),
+    ),
+  }));
+
+  res.send(result);
 });
