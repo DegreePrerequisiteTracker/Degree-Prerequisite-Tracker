@@ -6,11 +6,11 @@ const apiKey = process.env.SUPABASEKEY!;
 
 export interface UserData {
   id: string;
-  email: string;
+  email: string | undefined;
 }
 
 type AuthResponse =
-  | { id: string; email: string }
+  | { id: string; email: string | undefined }
   | {
       code: number;
       error_code: string;
