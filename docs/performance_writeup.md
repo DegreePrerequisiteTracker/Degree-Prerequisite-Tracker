@@ -11,39 +11,58 @@ will remain static. We assigned (roughly) 20% of the rows to users,
 ## Division of rows
 
 Users: 203320
+
 Plans: 305025
+
 Completed Courses: 505127
+
 Total: 1013472
 
 ## Endpoint performance
 
+### Users
 GET /users/history: 12.8ms
+
 PUT /users/history: 12.0 ms
+
 DELETE /users/history/{courseId}: 12.0 ms
 
+### Plans
 GET /plans: 30.3ms
+
 POST /plans: 14.7 ms
+
 GET /plans/{planId}: 13.5ms
+
 PUT /plans/{planId}: 21.5 ms
+
 DELETE /plans/{planId}: 14.3 ms
+
 GET /plans/{planId}/courses: 27.0 ms
+
 GET /plans/{planId}/progress: 14.2 ms
 
+### Departments
 GET /departments: 7.7ms
+
 GET /departments/{departmentId}/programs: 8.1 ms
 
+### Programs
 GET /programs/{programId}/concentrations: 7.9 ms
 
+### Subjects
 GET /subjects: 8.1 ms
+
 GET /subjects/{prefix}/courses: 8.3 ms
 
+### Courses
 GET /courses/: 12.3 ms
 
 ## Slowest endpoints
 
 1. GET /plans: 30.3ms
-2. GET /plans/{planId}/courses: 27.0 ms
-3. PUT /plans/{planId}: 21.5 ms
+3. GET /plans/{planId}/courses: 27.0 ms
+5. PUT /plans/{planId}: 21.5 ms
 
 ## Query analysis
 
